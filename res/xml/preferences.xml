@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:key="pref_menu_switcher"
+        android:title="@string/menu_switcher" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_enable"
+            android:summary="@string/enable_sum"
+            android:title="@string/enable_title" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_menu_config"
+        android:title="@string/menu_config" >
+        <Preference
+            android:key="pref_app_config"
+            android:summary="@string/app_config_sum"
+            android:title="@string/app_config_title" />
+
+        <com.haoutil.xposed.xled.model.IntEditTextPreference
+            android:defaultValue="300"
+            android:key="pref_led_onms"
+            android:summary="@string/led_onms_sum"
+            android:title="@string/led_onms_title" />
+        <com.haoutil.xposed.xled.model.IntEditTextPreference
+            android:defaultValue="1000"
+            android:key="pref_led_offms"
+            android:summary="@string/led_offms_sum"
+            android:title="@string/led_offms_title" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_menu_about"
+        android:title="@string/menu_about" >
+        <Preference
+            android:key="pref_app_info"
+            android:title="@string/app_info_title" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

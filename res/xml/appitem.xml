@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:key="pref_menu_switcher"
+        android:title="@string/menu_switcher" >
+        <CheckBoxPreference
+            android:key="pref_enable"
+            android:persistent="false"
+            android:summary="@string/enable_sum"
+            android:title="@string/enable_title" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_menu_config"
+        android:title="@string/menu_config" >
+        <EditTextPreference
+            android:defaultValue="0"
+            android:key="pref_color"
+            android:persistent="false"
+            android:summary="@string/app_led_color_sum"
+            android:title="@string/app_led_color_title" />
+        <EditTextPreference
+            android:defaultValue="300"
+            android:key="pref_onms"
+            android:persistent="false"
+            android:summary="@string/app_led_onms_sum"
+            android:title="@string/app_led_onms_title" />
+        <EditTextPreference
+            android:defaultValue="1000"
+            android:key="pref_offms"
+            android:persistent="false"
+            android:summary="@string/app_led_offms_sum"
+            android:title="@string/app_led_offms_title" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

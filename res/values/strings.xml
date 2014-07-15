@@ -1,0 +1,25 @@
+<resources>
+
+    <string name="app_name">XLED</string>
+    <string name="app_config_name">Application config</string>
+    <string name="menu_switcher">Switcher</string>
+    <string name="menu_config">LED configuration</string>
+    <string name="menu_about">About</string>
+    <string name="enable_title">Enable</string>
+    <string name="enable_sum">Enable to configure led notifications.</string>
+    <string name="app_config_title">Application configure</string>
+    <string name="app_config_sum">Configure led notification for each application.</string>
+    <string name="led_onms_title">Default LED onms</string>
+    <string name="led_onms_sum">The number of milliseconds for the LED to be on while it\'s flashing.</string>
+    <string name="led_offms_title">Default LED offms</string>
+    <string name="led_offms_sum">The number of milliseconds for the LED to be off while it\'s flashing.</string>
+    <string name="app_info_title">XLED</string>
+    <string name="load_apps_title">Loading applications&#8230;</string>
+    <string name="icon_desc">Application icon</string>
+    <string name="app_led_color_title">LED color</string>
+    <string name="app_led_color_sum">The color for the LED while it\'s flashing.</string>
+    <string name="app_led_onms_title">LED onms</string>
+    <string name="app_led_onms_sum">The number of milliseconds for the LED to be on while it\'s flashing.</string>
+    <string name="app_led_offms_title">LED offms</string>
+    <string name="app_led_offms_sum">The number of milliseconds for the LED to be off while it\'s flashing.</string>
+</resources>
