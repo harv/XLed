@@ -25,4 +25,6 @@
     <string name="tip_incorrect_colorformat">color format is incorrect!\neg: #FF00FF00</string>
     <string name="tip_incorrect_onmsformat">onms format is incorrect!\neg: 300</string>
     <string name="tip_incorrect_offmsformat">offms format is incorrect!\neg: 300</string>
+    <string name="new_color_code">New Color Code : </string>
+    <string name="commit_new_color">OK</string>
 </resources>

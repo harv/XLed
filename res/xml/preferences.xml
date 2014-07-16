@@ -20,11 +20,15 @@
 
         <com.haoutil.xposed.xled.model.IntEditTextPreference
             android:defaultValue="300"
+            android:digits="0123456789"
+            android:inputType="number"
             android:key="pref_led_onms"
             android:summary="@string/led_onms_sum"
             android:title="@string/led_onms_title" />
         <com.haoutil.xposed.xled.model.IntEditTextPreference
             android:defaultValue="1000"
+            android:digits="0123456789"
+            android:inputType="number"
             android:key="pref_led_offms"
             android:summary="@string/led_offms_sum"
             android:title="@string/led_offms_title" />

@@ -9,6 +9,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
@@ -21,7 +22,7 @@ public class AppItemActivity extends Activity {
 	private static SettingsHelper settingsHelper;
 	
 	private static CheckBoxPreference prefEnable;
-	private static EditTextPreference prefColor;
+	private static Preference prefColor;
 	private static EditTextPreference prefOnms;
 	private static EditTextPreference prefOffms;
 	
@@ -32,6 +33,8 @@ public class AppItemActivity extends Activity {
 	private static int color;
 	private static int onms;
 	private static int offms;
+	
+	private static OnPreferenceClickListener onColorClickListener;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,17 @@ public class AppItemActivity extends Activity {
 		color = settingsHelper.getInt("pref_app_color_" + packageName, Color.TRANSPARENT);
 		onms = settingsHelper.getInt("pref_app_onms_" + packageName, settingsHelper.getInt("pref_led_onms", 300));
 		offms = settingsHelper.getInt("pref_app_offms_" + packageName, settingsHelper.getInt("pref_led_offms", 1000));
+		
+		onColorClickListener = new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent intent = new Intent(AppItemActivity.this.getApplicationContext(), ColorPickerActivity.class);
+				intent.putExtra("originColor", color);
+				AppItemActivity.this.startActivityForResult(intent, 0);
+				
+				return false;
+			}
+		};
 	}
 	
 	@Override
@@ -65,6 +79,20 @@ public class AppItemActivity extends Activity {
 		AppItemActivity.this.setResult(RESULT_OK, intent);
 		
 		super.onBackPressed();
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if (resultCode == RESULT_OK) {
+			try {
+				int newColor = Color.parseColor(data.getStringExtra("color"));
+				settingsHelper.setInt("pref_app_color_" + packageName, newColor);
+				color = newColor;
+			} catch (Exception e) {
+				Toast.makeText(mContext, getString(R.string.tip_incorrect_colorformat), Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 	
 	public static class PrefsFragment extends PreferenceFragment {
@@ -88,23 +116,9 @@ public class AppItemActivity extends Activity {
 					return false;
 				}
 			});
-			
-			prefColor = (EditTextPreference) getPreferenceManager().findPreference("pref_color");
-			prefColor.setText(String.format("#%08X", (0xFFFFFFFF & color)));
-			prefColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-				@Override
-				public boolean onPreferenceChange(Preference preference, Object newValue) {
-					String color = (String) newValue;
-					try {
-						settingsHelper.setInt("pref_app_color_" + packageName, Color.parseColor(color));
-						prefColor.setText(color);
-					} catch (Exception e) {
-						Toast.makeText(mContext, getString(R.string.tip_incorrect_colorformat), Toast.LENGTH_SHORT).show();
-					}
-					
-					return false;
-				}
-			});
+
+			prefColor = getPreferenceManager().findPreference("pref_color");
+			prefColor.setOnPreferenceClickListener(onColorClickListener);
 			
 			prefOnms = (EditTextPreference) getPreferenceManager().findPreference("pref_onms");
 			prefOnms.setText(String.valueOf(onms));

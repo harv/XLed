@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.haoutil.xposed.xled"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.1" >
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -24,6 +24,7 @@
             android:name=".activity.AppListActivity"
             android:label="@string/app_config_name" />
         <activity android:name=".activity.AppItemActivity" />
+        <activity android:name=".activity.ColorPickerActivity" />
 
         <meta-data
             android:name="xposedmodule"
