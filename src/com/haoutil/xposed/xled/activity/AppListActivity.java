@@ -1,6 +1,8 @@
 package com.haoutil.xposed.xled.activity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.Activity;
@@ -63,9 +65,9 @@ public class AppListActivity extends Activity {
 			app.setEnable(data.getBooleanExtra("enable", false));
 			app.setColor(data.getIntExtra("color", Color.TRANSPARENT));
 			
-			int i = this.mListView.getFirstVisiblePosition();
-			View view = this.mListView.getChildAt(requestCode - i);
-			this.mListView.getAdapter().getView(requestCode, view, this.mListView);
+			AppListActivity.this.sort();
+			
+			((AppListAdapter) this.mListView.getAdapter()).notifyDataSetChanged();
 		}
 	}
 	
@@ -86,6 +88,22 @@ public class AppListActivity extends Activity {
 			}
 			dialog.setProgress(i + 1);
 		}
+		
+		AppListActivity.this.sort();
+	}
+	
+	private void sort() {
+		Collections.sort(AppListActivity.this.appList, new Comparator<AppListItem>() {
+			@Override
+			public int compare(AppListItem app1, AppListItem app2) {
+				int i = app1.getColor() - app2.getColor();
+				if (i == 0) {
+					i = app1.getName().compareTo(app2.getName());
+				}
+				
+				return i;
+			}
+		});
 	}
 	
 	private class loadAppListAdapterTask extends AsyncTask<Void, Void, AppListAdapter> {

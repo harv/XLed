@@ -99,7 +99,7 @@ public class AppItemActivity extends Activity {
 						settingsHelper.setInt("pref_app_color_" + packageName, Color.parseColor(color));
 						prefColor.setText(color);
 					} catch (Exception e) {
-						Toast.makeText(mContext, "color format is incorrect!\nexample: #FF00FF00", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, getString(R.string.tip_incorrect_colorformat), Toast.LENGTH_SHORT).show();
 					}
 					
 					return false;
@@ -116,7 +116,7 @@ public class AppItemActivity extends Activity {
 						settingsHelper.setInt("pref_app_onms_" + packageName, Integer.parseInt(onms));
 						prefOnms.setText(onms);
 					} catch (Exception e) {
-						Toast.makeText(mContext, "onms format is incorrect!\nexample: 300", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, getString(R.string.tip_incorrect_onmsformat), Toast.LENGTH_SHORT).show();
 					}
 					
 					return false;
@@ -133,7 +133,7 @@ public class AppItemActivity extends Activity {
 						settingsHelper.setInt("pref_app_offms_" + packageName, Integer.parseInt(offms));
 						prefOffms.setText(offms);
 					} catch (Exception e) {
-						Toast.makeText(mContext, "offms format is incorrect!\nexample: 1000", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, getString(R.string.tip_incorrect_offmsformat), Toast.LENGTH_SHORT).show();
 					}
 					return false;
 				}

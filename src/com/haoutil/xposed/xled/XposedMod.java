@@ -9,7 +9,6 @@ import com.haoutil.xposed.xled.util.SettingsHelper;
 
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
 public class XposedMod implements IXposedHookZygoteInit {
@@ -42,10 +41,6 @@ public class XposedMod implements IXposedHookZygoteInit {
 				notification.ledARGB = settingsHelper.getInt("pref_app_color_" + packageName, Color.TRANSPARENT);
 				notification.ledOnMS = settingsHelper.getInt("pref_app_onms_" + packageName, settingsHelper.getInt("pref_led_onms", 300));
 				notification.ledOffMS = settingsHelper.getInt("pref_app_offms_" + packageName, settingsHelper.getInt("pref_led_offms", 1000));
-				
-				XposedBridge.log("XLED: color " + notification.ledARGB);
-				XposedBridge.log("XLED: onms " + notification.ledOnMS);
-				XposedBridge.log("XLED: offms " + notification.ledOffMS);
 				
 				param.args[2] = notification;
 			}
