@@ -50,6 +50,8 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
 		}
 		picker.setColor(originColor);
 		
+		opacityBar.setOnTouchListener(this);
+		
 		tv_newColor.setText(String.format("#%08X", (0xFFFFFFFF & originColor)));
 		tv_newColor.setKeyListener(new ColorKeyListener());
 		tv_newColor.addTextChangedListener(this);

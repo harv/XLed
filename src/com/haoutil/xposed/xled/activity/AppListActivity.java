@@ -1,5 +1,7 @@
 package com.haoutil.xposed.xled.activity;
 
+import java.text.Collator;
+import java.text.RuleBasedCollator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -92,13 +94,19 @@ public class AppListActivity extends Activity {
 		AppListActivity.this.sort();
 	}
 	
+	RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance();
 	private void sort() {
 		Collections.sort(AppListActivity.this.appList, new Comparator<AppListItem>() {
 			@Override
 			public int compare(AppListItem app1, AppListItem app2) {
-				int i = app1.getColor() - app2.getColor();
+				int i = Boolean.valueOf(app2.isEnable()).compareTo(Boolean.valueOf(app1.isEnable()));
+				
 				if (i == 0) {
-					i = app1.getName().compareTo(app2.getName());
+					i = app1.getColor() - app2.getColor();
+				}
+				
+				if (i == 0) {
+					i = collator.compare(collator.getCollationKey(app1.getName()).getSourceString(), collator.getCollationKey(app2.getName()).getSourceString());
 				}
 				
 				return i;
@@ -195,7 +203,11 @@ public class AppListActivity extends Activity {
 				holder.iv_icon.setImageDrawable(item.getIcon());
 				holder.tv_name.setText(item.getName());
 				holder.tv_packagename.setText(item.getPackageName());
-				holder.cb_enable.setChecked(item.isEnable());
+				if (item.isEnable()) {
+					holder.cb_enable.setVisibility(View.VISIBLE);
+				} else {
+					holder.cb_enable.setVisibility(View.GONE);
+				}
 			}
 			
 			return view;
