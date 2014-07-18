@@ -45,6 +45,7 @@ public class AppListActivity extends Activity {
 		settingsHelper = new SettingsHelper(AppListActivity.this.getApplicationContext());
 		
 		mListView = (ListView) findViewById(R.id.lv_applist);
+		mListView.setFastScrollEnabled(true);
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -114,7 +115,7 @@ public class AppListActivity extends Activity {
 		});
 	}
 	
-	private class loadAppListAdapterTask extends AsyncTask<Void, Void, AppListAdapter> {
+	private class loadAppListAdapterTask extends AsyncTask<Void, Void, Void> {
 		ProgressDialog dialog;
 		
 		private loadAppListAdapterTask() {};
@@ -129,22 +130,20 @@ public class AppListActivity extends Activity {
 		}
 		
 		@Override
-		protected AppListAdapter doInBackground(Void... paramVarArgs) {
+		protected Void doInBackground(Void... params) {
 			if (AppListActivity.this.appList.size() == 0) {
 				AppListActivity.this.loadApps(this.dialog);
 			}
 			return null;
 		}
+		
 		@Override
-		protected void onPostExecute(AppListAdapter result) {
+		protected void onPostExecute(Void result) {
 			AppListAdapter adapter = new AppListAdapter(AppListActivity.this.getLayoutInflater(), AppListActivity.this.appList);
 			AppListActivity.this.mListView.setAdapter(adapter);
-			AppListActivity.this.mListView.setFastScrollEnabled(true);
 			try {
 				this.dialog.dismiss();
-				return;
-			} catch (Exception localException) {
-			}
+			} catch (Exception e) {}
 		}
 	}
 	
@@ -215,7 +214,7 @@ public class AppListActivity extends Activity {
 		
 		private class ItemViewHolder {
 			private LinearLayout ll_item;
-			public ImageView iv_icon;
+			private ImageView iv_icon;
 			private TextView tv_name;
 			private TextView tv_packagename;
 			private CheckBox cb_enable;

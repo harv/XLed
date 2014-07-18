@@ -2,8 +2,6 @@ package com.haoutil.xposed.xled.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -26,16 +24,13 @@ public class SettingsActivity extends Activity {
 		}
 		
 		try {
-			PackageManager manager = this.getPackageManager();
-			PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
-			versionName = info.versionName;
+			versionName = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
 		} catch (NameNotFoundException e) {}
 		
 		onPreferenceClickListener = new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference paramPreference) {
-				Intent intent = new Intent(SettingsActivity.this.getApplicationContext(), AppListActivity.class);
-				SettingsActivity.this.startActivity(intent);
+				SettingsActivity.this.startActivity(new Intent(SettingsActivity.this.getApplicationContext(), AppListActivity.class));
 				
 				return false;
 			}

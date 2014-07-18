@@ -85,10 +85,9 @@ public class AppItemActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		
 		if (resultCode == RESULT_OK) {
+			color = Color.parseColor(data.getStringExtra("color"));
 			try {
-				int newColor = Color.parseColor(data.getStringExtra("color"));
-				settingsHelper.setInt("pref_app_color_" + packageName, newColor);
-				color = newColor;
+				settingsHelper.setInt("pref_app_color_" + packageName, color);
 			} catch (Exception e) {
 				Toast.makeText(mContext, getString(R.string.tip_incorrect_colorformat), Toast.LENGTH_SHORT).show();
 			}

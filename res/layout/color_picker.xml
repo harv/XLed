@@ -2,25 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="10dip" >
 
     <com.larswerkman.holocolorpicker.ColorPicker
         android:id="@+id/picker"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:layout_height="wrap_content" />
 
     <com.larswerkman.holocolorpicker.OpacityBar
         android:id="@+id/opacitybar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dip"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
@@ -33,8 +34,12 @@
             android:id="@+id/tv_newColor"
             android:layout_width="120dip"
             android:layout_height="wrap_content"
+            android:digits="#0123456789abcdefABCDEF"
             android:inputType="text"
-            android:paddingLeft="5dip" />
+            android:maxLength="9"
+            android:paddingLeft="5dip"
+            android:textColor="#FF000000"
+            android:textColorHighlight="#FF000000" />
 
         <Button
             android:id="@+id/bt_commit"
