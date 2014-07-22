@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
     <ListView
         android:id="@+id/lv_applist"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:scrollbars="none" >
     </ListView>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/dialog"
+        android:layout_width="80dip"
+        android:layout_height="80dip"
+        android:layout_gravity="center"
+        android:background="@drawable/header_toast_background"
+        android:gravity="center"
+        android:textColor="#ffffffff"
+        android:textSize="42sp"
+        android:visibility="invisible" />
+
+    <com.haoutil.xposed.xled.model.SideBar
+        android:id="@+id/sidrbar"
+        android:layout_width="30dip"
+        android:layout_height="fill_parent"
+        android:layout_gravity="right|center"
+        android:visibility="invisible" />
+
+</FrameLayout>

@@ -1,10 +1,7 @@
 package com.haoutil.xposed.xled.activity;
 
-import java.text.Collator;
-import java.text.RuleBasedCollator;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import android.app.Activity;
@@ -13,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,12 +27,21 @@ import android.widget.TextView;
 
 import com.haoutil.xposed.xled.R;
 import com.haoutil.xposed.xled.model.AppListItem;
+import com.haoutil.xposed.xled.model.SideBar;
+import com.haoutil.xposed.xled.model.SideBar.OnTouchingLetterChangedListener;
+import com.haoutil.xposed.xled.util.CharacterParser;
+import com.haoutil.xposed.xled.util.PinyinComparator;
 import com.haoutil.xposed.xled.util.SettingsHelper;
 
 public class AppListActivity extends Activity {
 	private SettingsHelper settingsHelper;
+	private CharacterParser characterParser;
+	private PinyinComparator pinyinComparator;
 	
 	private ListView mListView;
+	private SideBar mSideBar;
+	private TextView mDialog;
+	
 	private List<AppListItem> appList = new ArrayList<AppListItem>();
 	
 	@Override
@@ -43,9 +50,10 @@ public class AppListActivity extends Activity {
 		setContentView(R.layout.app_list);
 		
 		settingsHelper = new SettingsHelper(AppListActivity.this.getApplicationContext());
+		characterParser = CharacterParser.getInstance();
+		pinyinComparator = new PinyinComparator();
 		
 		mListView = (ListView) findViewById(R.id.lv_applist);
-		mListView.setFastScrollEnabled(true);
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -53,6 +61,19 @@ public class AppListActivity extends Activity {
 				intent.putExtra("appName", ((TextView) view.findViewById(R.id.tv_name)).getText().toString());
 				intent.putExtra("packageName", ((TextView) view.findViewById(R.id.tv_packagename)).getText().toString());
 				AppListActivity.this.startActivityForResult(intent, position);
+			}
+		});
+		
+		mSideBar = (SideBar) findViewById(R.id.sidrbar);
+		mDialog = (TextView) findViewById(R.id.dialog);
+		mSideBar.setDialog(mDialog);
+		mSideBar.setOnTouchingLetterChangedListener(new OnTouchingLetterChangedListener() {
+			@Override
+			public void onTouchingLetterChanged(String s) {
+				int position = ((AppListAdapter) AppListActivity.this.mListView.getAdapter()).getPositionForSection(s.charAt(0));
+				if(position != -1){
+					AppListActivity.this.mListView.setSelection(position);
+				}
 			}
 		});
 		
@@ -67,8 +88,9 @@ public class AppListActivity extends Activity {
 			AppListItem app = (AppListItem) this.mListView.getAdapter().getItem(requestCode);
 			app.setEnable(data.getBooleanExtra("enable", false));
 			app.setColor(data.getIntExtra("color", Color.TRANSPARENT));
+			app.setSortLetter(determineSortLetter(app));
 			
-			AppListActivity.this.sort();
+			Collections.sort(AppListActivity.this.appList, pinyinComparator);
 			
 			((AppListAdapter) this.mListView.getAdapter()).notifyDataSetChanged();
 		}
@@ -81,38 +103,37 @@ public class AppListActivity extends Activity {
 		for (int i = 0; i < list.size(); i++) {
 			ApplicationInfo appInfo = list.get(i);
 			if (!appInfo.packageName.equals("com.haoutil.xposed.xled")) {
-				AppListActivity.this.appList.add(new AppListItem(
-						settingsHelper.getBoolean("pref_app_enable_" + appInfo.packageName, false),
-						appInfo.loadIcon(packageManager),
-						appInfo.loadLabel(packageManager).toString(),
-						appInfo.packageName,
-						settingsHelper.getInt("pref_app_color_" + appInfo.packageName, Color.TRANSPARENT))
-				);
+				boolean enable = settingsHelper.getBoolean("pref_app_enable_" + appInfo.packageName, false);
+				Drawable icon = appInfo.loadIcon(packageManager);
+				String appName = appInfo.loadLabel(packageManager).toString();
+				String pinyin = characterParser.getSelling(appName).toUpperCase();
+				String packageName = appInfo.packageName;
+				int color = settingsHelper.getInt("pref_app_color_" + appInfo.packageName, Color.TRANSPARENT);
+				
+				AppListItem app = new AppListItem(null, enable, icon, appName, pinyin, packageName, color);
+				
+				app.setSortLetter(determineSortLetter(app));
+				
+				AppListActivity.this.appList.add(app);
 			}
 			dialog.setProgress(i + 1);
 		}
 		
-		AppListActivity.this.sort();
+		Collections.sort(AppListActivity.this.appList, pinyinComparator);
 	}
 	
-	RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance();
-	private void sort() {
-		Collections.sort(AppListActivity.this.appList, new Comparator<AppListItem>() {
-			@Override
-			public int compare(AppListItem app1, AppListItem app2) {
-				int i = Boolean.valueOf(app2.isEnable()).compareTo(Boolean.valueOf(app1.isEnable()));
-				
-				if (i == 0) {
-					i = app1.getColor() - app2.getColor();
-				}
-				
-				if (i == 0) {
-					i = collator.compare(collator.getCollationKey(app1.getName()).getSourceString(), collator.getCollationKey(app2.getName()).getSourceString());
-				}
-				
-				return i;
+	private String determineSortLetter(AppListItem app) {
+		String sortLetter;
+		if (app.getColor() == Color.TRANSPARENT) {
+			sortLetter = app.getPinyin().substring(0, 1);
+			if (!sortLetter.matches("[A-Z]")) {
+				sortLetter = "#";
 			}
-		});
+		} else {
+			sortLetter = "☆";
+		}
+		
+		return sortLetter;
 	}
 	
 	private class loadAppListAdapterTask extends AsyncTask<Void, Void, Void> {
@@ -141,6 +162,7 @@ public class AppListActivity extends Activity {
 		protected void onPostExecute(Void result) {
 			AppListAdapter adapter = new AppListAdapter(AppListActivity.this.getLayoutInflater(), AppListActivity.this.appList);
 			AppListActivity.this.mListView.setAdapter(adapter);
+			AppListActivity.this.mSideBar.setVisibility(View.VISIBLE);
 			try {
 				this.dialog.dismiss();
 			} catch (Exception e) {}
@@ -155,7 +177,7 @@ public class AppListActivity extends Activity {
 			this.inflater = inflater;
 			this.list = list;
 		}
-	
+
 		@Override
 		public int getCount() {
 			return list.size();
@@ -188,6 +210,7 @@ public class AppListActivity extends Activity {
 			if (holder == null) {
 				holder = new ItemViewHolder();
 				
+				holder.tv_catalog = (TextView) view.findViewById(R.id.tv_catalog);
 				holder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
 				holder.iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
 				holder.tv_name = (TextView) view.findViewById(R.id.tv_name);
@@ -202,17 +225,43 @@ public class AppListActivity extends Activity {
 				holder.iv_icon.setImageDrawable(item.getIcon());
 				holder.tv_name.setText(item.getName());
 				holder.tv_packagename.setText(item.getPackageName());
+				
 				if (item.isEnable()) {
 					holder.cb_enable.setVisibility(View.VISIBLE);
 				} else {
 					holder.cb_enable.setVisibility(View.GONE);
+				}
+				
+				int section = getSectionForPosition(position);
+				if(position == getPositionForSection(section)) {
+					holder.tv_catalog.setVisibility(View.VISIBLE);
+					holder.tv_catalog.setText(item.getSortLetter());
+				} else {
+					holder.tv_catalog.setVisibility(View.GONE);
 				}
 			}
 			
 			return view;
 		}
 		
+		public int getSectionForPosition(int position) {
+			return list.get(position).getSortLetter().charAt(0);
+		}
+	
+		public int getPositionForSection(int section) {
+			for (int i = 0; i < getCount(); i++) {
+				String sortStr = list.get(i).getSortLetter();
+				char firstChar = sortStr.charAt(0);
+				if (firstChar == section) {
+					return i;
+				}
+			}
+			
+			return -1;
+		}
+		
 		private class ItemViewHolder {
+			private TextView tv_catalog;
 			private LinearLayout ll_item;
 			private ImageView iv_icon;
 			private TextView tv_name;

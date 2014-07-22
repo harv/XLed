@@ -3,19 +3,32 @@ package com.haoutil.xposed.xled.model;
 import android.graphics.drawable.Drawable;
 
 public class AppListItem {
+	private String sortLetter;
+
 	private boolean enable;
 	private Drawable icon;
 	private String name;
+	private String pinyin;
 	private String packageName;
 	private int color;
 
-	public AppListItem(boolean enable, Drawable icon, String name,
-			String packageName, int color) {
+	public AppListItem(String sortLetter, boolean enable, Drawable icon,
+			String name, String pinyin, String packageName, int color) {
+		this.sortLetter = sortLetter;
 		this.enable = enable;
 		this.icon = icon;
 		this.name = name;
+		this.pinyin = pinyin;
 		this.packageName = packageName;
 		this.color = color;
+	}
+
+	public String getSortLetter() {
+		return sortLetter;
+	}
+
+	public void setSortLetter(String sortLetter) {
+		this.sortLetter = sortLetter;
 	}
 
 	public boolean isEnable() {
@@ -40,6 +53,14 @@ public class AppListItem {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPinyin() {
+		return pinyin;
+	}
+
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
 	}
 
 	public String getPackageName() {
