@@ -34,6 +34,11 @@ public class XposedMod implements IXposedHookZygoteInit {
 				}
 				
 				Notification notification = (Notification) param.args[2];
+				if ((notification.defaults & Notification.DEFAULT_LIGHTS) == Notification.DEFAULT_LIGHTS) {
+					notification.defaults &= ~(~notification.defaults | Notification.DEFAULT_LIGHTS);
+					notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+				}
+				
 				if ((notification.flags & Notification.FLAG_SHOW_LIGHTS) != Notification.FLAG_SHOW_LIGHTS) {
 					return;
 				}
