@@ -50,7 +50,7 @@ public class AppItemActivity extends Activity {
 		settingsHelper = new SettingsHelper(AppItemActivity.this.getApplicationContext());
 		
 		appName = getIntent().getStringExtra("appName");
-		setTitle("LED config[" + appName + "]");
+		setTitle(getString(R.string.app_config_name) + "[" + appName + "]");
 		
 		packageName = getIntent().getStringExtra("packageName");
 		
