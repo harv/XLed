@@ -19,11 +19,15 @@ import com.haoutil.xposed.xled.R;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener;
 import com.larswerkman.holocolorpicker.OpacityBar;
+import com.larswerkman.holocolorpicker.SVBar;
+import com.larswerkman.holocolorpicker.SaturationBar;
 
 public class ColorPickerActivity extends Activity implements OnTouchListener, OnColorChangedListener, OnClickListener, TextWatcher {
 	private InputMethodManager imm;
 	
 	private ColorPicker picker;
+    private SaturationBar saturationBar;
+    private SVBar svBar;
 	private OpacityBar opacityBar;
 	private EditText tv_newColor;
 	private Button bt_commit;
@@ -36,12 +40,16 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
 		imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		
 		picker = (ColorPicker) findViewById(R.id.picker);
+        saturationBar = (SaturationBar) findViewById(R.id.saturationBar);
+        svBar = (SVBar) findViewById(R.id.svbar);
 		opacityBar = (OpacityBar) findViewById(R.id.opacitybar);
 		tv_newColor = (EditText) findViewById(R.id.tv_newColor);
 		bt_commit = (Button) findViewById(R.id.bt_commit);
 		
 		picker.setOnTouchListener(this);
 		picker.setOnColorChangedListener(this);
+        picker.addSaturationBar(saturationBar);
+        picker.addSVBar(svBar);
 		picker.addOpacityBar(opacityBar);
 
 		int originColor = getIntent().getIntExtra("originColor", Color.TRANSPARENT);
@@ -51,8 +59,10 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
 			originColor = Color.BLUE;
 		}
 		picker.setColor(originColor);
-		
-		opacityBar.setOnTouchListener(this);
+
+        saturationBar.setOnTouchListener(this);
+        svBar.setOnTouchListener(this);
+        opacityBar.setOnTouchListener(this);
 		
 		tv_newColor.setText(String.format("#%08X", (0xFFFFFFFF & originColor)));
 		tv_newColor.addTextChangedListener(this);
