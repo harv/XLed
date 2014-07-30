@@ -22,6 +22,7 @@ public class AppItemActivity extends Activity {
 	private static SettingsHelper settingsHelper;
 	
 	private static CheckBoxPreference prefEnable;
+	private static CheckBoxPreference prefDisableDefault;
 	private static Preference prefColor;
 	private static EditTextPreference prefOnms;
 	private static EditTextPreference prefOffms;
@@ -30,6 +31,7 @@ public class AppItemActivity extends Activity {
 	private static String packageName;
 	
 	private static boolean enable;
+	private static boolean disableDefault;
 	private static int color;
 	private static int onms;
 	private static int offms;
@@ -55,6 +57,7 @@ public class AppItemActivity extends Activity {
 		packageName = getIntent().getStringExtra("packageName");
 		
 		enable = settingsHelper.getBoolean("pref_app_enable_" + packageName, false);
+		disableDefault = settingsHelper.getBoolean("pref_app_disableled_" + packageName, false);
 		color = settingsHelper.getInt("pref_app_color_" + packageName, Color.TRANSPARENT);
 		onms = settingsHelper.getInt("pref_app_onms_" + packageName, settingsHelper.getInt("pref_led_onms", 300));
 		offms = settingsHelper.getInt("pref_app_offms_" + packageName, settingsHelper.getInt("pref_led_offms", 1000));
@@ -75,6 +78,7 @@ public class AppItemActivity extends Activity {
 	public void onBackPressed() {
 		Intent intent = new Intent();
 		intent.putExtra("enable", settingsHelper.getBoolean("pref_app_enable_" + packageName, false));
+		intent.putExtra("disableLED", settingsHelper.getBoolean("pref_app_disableled_" + packageName, false));
 		intent.putExtra("color", settingsHelper.getInt("pref_app_color_" + packageName, Color.TRANSPARENT));
 		AppItemActivity.this.setResult(RESULT_OK, intent);
 		
@@ -111,6 +115,21 @@ public class AppItemActivity extends Activity {
 					boolean enable = (Boolean) newValue;
 					settingsHelper.setBoolean("pref_app_enable_" + packageName, enable);
 					prefEnable.setChecked(enable);
+					prefDisableDefault.setEnabled(enable);
+					
+					return false;
+				}
+			});
+			
+			prefDisableDefault = (CheckBoxPreference) getPreferenceManager().findPreference("pref_disable_led");
+			prefDisableDefault.setChecked(disableDefault);
+			prefDisableDefault.setEnabled(enable);
+			prefDisableDefault.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object newValue) {
+					boolean enable = (Boolean) newValue;
+					settingsHelper.setBoolean("pref_app_disableled_" + packageName, enable);
+					prefDisableDefault.setChecked(enable);
 					
 					return false;
 				}

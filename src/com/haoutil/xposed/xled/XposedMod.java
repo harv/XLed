@@ -39,6 +39,10 @@ public class XposedMod implements IXposedHookZygoteInit {
 					notification.flags |= Notification.FLAG_SHOW_LIGHTS;
 				}
 				
+				if (settingsHelper.getBoolean("pref_app_disableled_" + packageName, false)) {
+					notification.flags &= ~(~notification.flags | Notification.FLAG_SHOW_LIGHTS);
+				}
+				
 				if ((notification.flags & Notification.FLAG_SHOW_LIGHTS) != Notification.FLAG_SHOW_LIGHTS) {
 					return;
 				}

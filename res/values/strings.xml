@@ -6,8 +6,12 @@
     <string name="menu_switcher">Switcher</string>
     <string name="menu_config">LED settings</string>
     <string name="menu_about">About</string>
-    <string name="enable_title">Enable</string>
+    <string name="enable_title">Enable XLED</string>
     <string name="enable_sum">Enable custom LED notification settings will override app\'s default settings.</string>
+    <string name="enable_app_title">Enable custom LED</string>
+    <string name="enable_app_sum">Enable custom LED notification settings will override app\'s default settings.\nUncheck this option will not disable default settings.</string>
+    <string name="disable_led_title">Disable LED</string>
+    <string name="disable_led_sum">Check this option to disable app\'s default settings(The LED will not flashing).</string>
     <string name="app_config_title">Per-app settings</string>
     <string name="app_config_sum">Configure custom LED notification settings for each application.</string>
     <string name="led_onms_title">Default LED on time</string>
@@ -32,5 +36,7 @@
     <string name="color_picker_saturation">Saturation</string>
     <string name="color_picker_value">Value</string>
     <string name="color_picker_opacity">Opacity</string>
+    <string name="catalog_active">Active</string>
+    <string name="catalog_disableled">Disabled</string>
 
 </resources>

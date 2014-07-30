@@ -7,8 +7,14 @@
         <CheckBoxPreference
             android:key="pref_enable"
             android:persistent="false"
-            android:summary="@string/enable_sum"
-            android:title="@string/enable_title" />
+            android:summary="@string/enable_app_sum"
+            android:title="@string/enable_app_title" />
+        <CheckBoxPreference
+            android:enabled="false"
+            android:key="pref_disable_led"
+            android:persistent="false"
+            android:summary="@string/disable_led_sum"
+            android:title="@string/disable_led_title" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_menu_config"

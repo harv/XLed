@@ -6,16 +6,19 @@ public class AppListItem {
 	private String sortLetter;
 
 	private boolean enable;
+	private boolean disableLED;
 	private Drawable icon;
 	private String name;
 	private String pinyin;
 	private String packageName;
 	private int color;
 
-	public AppListItem(String sortLetter, boolean enable, Drawable icon,
-			String name, String pinyin, String packageName, int color) {
+	public AppListItem(String sortLetter, boolean enable, boolean disableLED,
+			Drawable icon, String name, String pinyin, String packageName,
+			int color) {
 		this.sortLetter = sortLetter;
 		this.enable = enable;
+		this.disableLED = disableLED;
 		this.icon = icon;
 		this.name = name;
 		this.pinyin = pinyin;
@@ -37,6 +40,14 @@ public class AppListItem {
 
 	public void setEnable(boolean enable) {
 		this.enable = enable;
+	}
+
+	public boolean isDisableLED() {
+		return disableLED;
+	}
+
+	public void setDisableLED(boolean disableLED) {
+		this.disableLED = disableLED;
 	}
 
 	public Drawable getIcon() {

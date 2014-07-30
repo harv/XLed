@@ -87,6 +87,7 @@ public class AppListActivity extends Activity {
 		if (this.mListView != null) {
 			AppListItem app = (AppListItem) this.mListView.getAdapter().getItem(requestCode);
 			app.setEnable(data.getBooleanExtra("enable", false));
+			app.setDisableLED(data.getBooleanExtra("disableLED", false));
 			app.setColor(data.getIntExtra("color", Color.TRANSPARENT));
 			app.setSortLetter(determineSortLetter(app));
 			
@@ -104,13 +105,14 @@ public class AppListActivity extends Activity {
 			ApplicationInfo appInfo = list.get(i);
 			if (!appInfo.packageName.equals("com.haoutil.xposed.xled")) {
 				boolean enable = settingsHelper.getBoolean("pref_app_enable_" + appInfo.packageName, false);
+				boolean disabledLED = settingsHelper.getBoolean("pref_app_disableled_" + appInfo.packageName, false);
 				Drawable icon = appInfo.loadIcon(packageManager);
 				String appName = appInfo.loadLabel(packageManager).toString();
 				String pinyin = characterParser.getSelling(appName).toUpperCase();
 				String packageName = appInfo.packageName;
 				int color = settingsHelper.getInt("pref_app_color_" + appInfo.packageName, Color.TRANSPARENT);
 				
-				AppListItem app = new AppListItem(null, enable, icon, appName, pinyin, packageName, color);
+				AppListItem app = new AppListItem(null, enable, disabledLED, icon, appName, pinyin, packageName, color);
 				
 				app.setSortLetter(determineSortLetter(app));
 				
@@ -124,13 +126,15 @@ public class AppListActivity extends Activity {
 	
 	private String determineSortLetter(AppListItem app) {
 		String sortLetter;
-		if (app.getColor() == Color.TRANSPARENT) {
+		if (app.isDisableLED()) {
+			sortLetter = "△";
+		} else if (app.getColor() != Color.TRANSPARENT) {
+			sortLetter = "☆";
+		} else {
 			sortLetter = app.getPinyin().substring(0, 1);
 			if (!sortLetter.matches("[A-Z]")) {
 				sortLetter = "#";
 			}
-		} else {
-			sortLetter = "☆";
 		}
 		
 		return sortLetter;
@@ -221,7 +225,11 @@ public class AppListActivity extends Activity {
 			}
 			
 			if (item != null) {
-				holder.ll_item.setBackgroundColor(item.getColor());
+				if (!item.isDisableLED()) {
+					holder.ll_item.setBackgroundColor(item.getColor());
+				} else {
+					holder.ll_item.setBackgroundColor(Color.TRANSPARENT);
+				}
 				holder.iv_icon.setImageDrawable(item.getIcon());
 				holder.tv_name.setText(item.getName());
 				holder.tv_packagename.setText(item.getPackageName());
@@ -235,7 +243,13 @@ public class AppListActivity extends Activity {
 				int section = getSectionForPosition(position);
 				if(position == getPositionForSection(section)) {
 					holder.tv_catalog.setVisibility(View.VISIBLE);
-					holder.tv_catalog.setText(item.getSortLetter());
+					String catalog = item.getSortLetter();
+					if (catalog.equals("☆")) {
+						catalog += "(" + getString(R.string.catalog_active) + ")";
+					} else if (catalog.equals("△")) {
+						catalog += "(" + getString(R.string.catalog_disableled) + ")";
+					}
+					holder.tv_catalog.setText(catalog);
 				} else {
 					holder.tv_catalog.setVisibility(View.GONE);
 				}
