@@ -19,6 +19,8 @@
     <string name="led_offms_title">Default LED off time</string>
     <string name="led_offms_sum">The number of milliseconds for the LED to be off while it\'s flashing.</string>
     <string name="app_info_title">XLED</string>
+    <string name="enable_icon_title">Show icon</string>
+    <string name="enable_icon_sum">Show XLED icon in app drawer.</string>
     <string name="enable_debug_title">Debug mode</string>
     <string name="enable_debug_sum">Enable debug mode for writing errors to [Xposed Log]</string>
     <string name="load_apps_title">Loading applications&#8230;</string>

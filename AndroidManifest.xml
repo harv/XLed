@@ -20,11 +20,26 @@
                 <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
             </intent-filter>
         </activity>
+
+        <activity-alias
+            android:name=".activity.ShowIcon"
+            android:enabled="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/app_name"
+            android:targetActivity=".activity.SettingsActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
         <activity
             android:name=".activity.AppListActivity"
             android:label="@string/app_config_name" />
         <activity android:name=".activity.AppItemActivity" />
-        <activity android:name=".activity.ColorPickerActivity"
+        <activity
+            android:name=".activity.ColorPickerActivity"
             android:label="@string/color_picker_name" />
 
         <meta-data

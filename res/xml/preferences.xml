@@ -40,6 +40,11 @@
             android:key="pref_debug"
             android:summary="@string/enable_debug_sum"
             android:title="@string/enable_debug_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_icon"
+            android:summary="@string/enable_icon_sum"
+            android:title="@string/enable_icon_title" />
 
         <Preference
             android:key="pref_app_info"
