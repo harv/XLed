@@ -40,6 +40,11 @@
             android:persistent="false"
             android:summary="@string/app_led_offms_sum"
             android:title="@string/app_led_offms_title" />
+
+        <Preference
+            android:key="pref_reset"
+            android:summary="@string/app_reset_sum"
+            android:title="@string/app_reset_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

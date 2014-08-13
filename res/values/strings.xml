@@ -19,6 +19,8 @@
     <string name="led_offms_title">Default LED off time</string>
     <string name="led_offms_sum">The number of milliseconds for the LED to be off while it\'s flashing.</string>
     <string name="app_info_title">XLED</string>
+    <string name="enable_debug_title">Debug mode</string>
+    <string name="enable_debug_sum">Enable debug mode for writing errors to [Xposed Log]</string>
     <string name="load_apps_title">Loading applications&#8230;</string>
     <string name="icon_desc">Application icon</string>
     <string name="app_led_color_title">LED color</string>
@@ -27,6 +29,9 @@
     <string name="app_led_onms_sum">The number of milliseconds for the LED to be on while it\'s flashing.</string>
     <string name="app_led_offms_title">LED off time</string>
     <string name="app_led_offms_sum">The number of milliseconds for the LED to be off while it\'s flashing.</string>
+    <string name="app_reset_title">Reset</string>
+    <string name="app_reset_sum">Reset to default settings.</string>
+    <string name="tip_reset">Reset succeed!</string>
     <string name="tip_incorrect_colorformat">color format is incorrect!\neg: #FF00FF00</string>
     <string name="tip_incorrect_onmsformat">onms format is incorrect!\neg: 300</string>
     <string name="tip_incorrect_offmsformat">offms format is incorrect!\neg: 1000</string>

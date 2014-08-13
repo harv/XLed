@@ -128,7 +128,7 @@ public class AppListActivity extends Activity {
 		String sortLetter;
 		if (app.isDisableLED()) {
 			sortLetter = "△";
-		} else if (app.getColor() != Color.TRANSPARENT) {
+		} else if (app.isEnable()) {
 			sortLetter = "☆";
 		} else {
 			sortLetter = app.getPinyin().substring(0, 1);

@@ -26,6 +26,7 @@ public class AppItemActivity extends Activity {
 	private static Preference prefColor;
 	private static EditTextPreference prefOnms;
 	private static EditTextPreference prefOffms;
+	private static Preference prefReset;
 	
 	private static String appName;
 	private static String packageName;
@@ -37,6 +38,7 @@ public class AppItemActivity extends Activity {
 	private static int offms;
 	
 	private static OnPreferenceClickListener onColorClickListener;
+	private static OnPreferenceClickListener onResetClickListener;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,18 @@ public class AppItemActivity extends Activity {
 				Intent intent = new Intent(AppItemActivity.this.getApplicationContext(), ColorPickerActivity.class);
 				intent.putExtra("originColor", color);
 				AppItemActivity.this.startActivityForResult(intent, 0);
+				
+				return false;
+			}
+		};
+		
+		onResetClickListener = new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				settingsHelper.setInt("pref_app_color_" + packageName, Color.TRANSPARENT);
+				settingsHelper.setInt("pref_app_onms_" + packageName, 300);
+				settingsHelper.setInt("pref_app_offms_" + packageName, 1000);
+				Toast.makeText(AppItemActivity.this, getString(R.string.tip_reset), Toast.LENGTH_SHORT).show();
 				
 				return false;
 			}
@@ -170,6 +184,9 @@ public class AppItemActivity extends Activity {
 					return false;
 				}
 			});
+			
+			prefReset = getPreferenceScreen().findPreference("pref_reset");
+			prefReset.setOnPreferenceClickListener(onResetClickListener);
 		}
 	}
 }
