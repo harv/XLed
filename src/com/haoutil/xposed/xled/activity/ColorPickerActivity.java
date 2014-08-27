@@ -32,6 +32,8 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
 	private EditText tv_newColor;
 	private Button bt_commit;
 
+    private int requestCode;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,6 +56,8 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
 
 		int originColor = getIntent().getIntExtra("originColor", Color.TRANSPARENT);
 		picker.setOldCenterColor(originColor);
+
+        requestCode = getIntent().getIntExtra("requestCode", 0);
 		
 		if (originColor == Color.TRANSPARENT) {
 			originColor = Color.BLUE;
@@ -102,6 +106,7 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
 	public void onClick(View v) {
 		Intent intent = new Intent();
 		intent.putExtra("color", tv_newColor.getText().toString());
+		intent.putExtra("requestCode", requestCode);
 		ColorPickerActivity.this.setResult(RESULT_OK, intent);
 		
 		ColorPickerActivity.this.finish();

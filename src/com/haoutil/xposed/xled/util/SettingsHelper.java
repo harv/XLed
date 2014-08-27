@@ -90,6 +90,16 @@ public class SettingsHelper {
 			editor.commit();
 		}
 	}
+
+    public boolean contains(String key) {
+        if (mPreferences != null) {
+            return mPreferences.contains(key);
+        } else if (mXPreferences != null) {
+            return mXPreferences.contains(key);
+        }
+
+        return false;
+    }
 	
 	public void reload() {
 		if (mXPreferences != null) {

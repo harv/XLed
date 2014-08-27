@@ -23,6 +23,7 @@ public class AppItemActivity extends Activity {
 	
 	private static CheckBoxPreference prefEnable;
 	private static CheckBoxPreference prefDisableDefault;
+    private static CheckBoxPreference prefForceEnable;
 	private static Preference prefColor;
 	private static EditTextPreference prefOnms;
 	private static EditTextPreference prefOffms;
@@ -33,6 +34,7 @@ public class AppItemActivity extends Activity {
 	
 	private static boolean enable;
 	private static boolean disableDefault;
+	private static boolean forceEnable;
 	private static int color;
 	private static int onms;
 	private static int offms;
@@ -60,6 +62,7 @@ public class AppItemActivity extends Activity {
 		
 		enable = settingsHelper.getBoolean("pref_app_enable_" + packageName, false);
 		disableDefault = settingsHelper.getBoolean("pref_app_disableled_" + packageName, false);
+        forceEnable = settingsHelper.getBoolean("pref_app_forceenable_" + packageName, true);
 		color = settingsHelper.getInt("pref_app_color_" + packageName, Color.TRANSPARENT);
 		onms = settingsHelper.getInt("pref_app_onms_" + packageName, settingsHelper.getInt("pref_led_onms", 300));
 		offms = settingsHelper.getInt("pref_app_offms_" + packageName, settingsHelper.getInt("pref_led_offms", 1000));
@@ -78,9 +81,14 @@ public class AppItemActivity extends Activity {
 		onResetClickListener = new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				settingsHelper.setInt("pref_app_color_" + packageName, Color.TRANSPARENT);
-				settingsHelper.setInt("pref_app_onms_" + packageName, 300);
-				settingsHelper.setInt("pref_app_offms_" + packageName, 1000);
+                color = Color.TRANSPARENT;
+                onms = 300;
+                offms = 1000;
+
+				settingsHelper.setInt("pref_app_color_" + packageName, color);
+				settingsHelper.setInt("pref_app_onms_" + packageName, onms);
+				settingsHelper.setInt("pref_app_offms_" + packageName, offms);
+
 				Toast.makeText(AppItemActivity.this, getString(R.string.tip_reset), Toast.LENGTH_SHORT).show();
 				
 				return false;
@@ -148,6 +156,19 @@ public class AppItemActivity extends Activity {
 					return false;
 				}
 			});
+
+            prefForceEnable = (CheckBoxPreference) getPreferenceManager().findPreference("pref_forceenable");
+            prefForceEnable.setChecked(forceEnable);
+            prefForceEnable.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean enable = (Boolean) newValue;
+                    settingsHelper.setBoolean("pref_app_forceenable_" + packageName, enable);
+                    prefForceEnable.setChecked(enable);
+
+                    return false;
+                }
+            });
 
 			prefColor = getPreferenceManager().findPreference("pref_color");
 			prefColor.setOnPreferenceClickListener(onColorClickListener);

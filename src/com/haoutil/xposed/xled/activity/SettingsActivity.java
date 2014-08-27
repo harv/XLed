@@ -33,8 +33,12 @@ public class SettingsActivity extends Activity {
 		
 		onPreferenceClickListener = new OnPreferenceClickListener() {
 			@Override
-			public boolean onPreferenceClick(Preference paramPreference) {
-				SettingsActivity.this.startActivity(new Intent(SettingsActivity.this.getApplicationContext(), AppListActivity.class));
+			public boolean onPreferenceClick(Preference preference) {
+                if (preference.getKey().equals("pref_app_config")) {
+                    SettingsActivity.this.startActivity(new Intent(SettingsActivity.this, AppListActivity.class));
+                } else if (preference.getKey().equals("pref_charging_led")) {
+                    SettingsActivity.this.startActivity(new Intent(SettingsActivity.this, ChargingActivity.class));
+                }
 				
 				return false;
 			}
@@ -43,17 +47,17 @@ public class SettingsActivity extends Activity {
 		onPreferenceChangeListener = new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				if ((Boolean) newValue) {
-					getPackageManager().setComponentEnabledSetting(
-							new ComponentName(SettingsActivity.this, "com.haoutil.xposed.xled.activity.ShowIcon"),
-							PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-							PackageManager.DONT_KILL_APP);
-				} else {
-					getPackageManager().setComponentEnabledSetting(
-							new ComponentName(SettingsActivity.this, "com.haoutil.xposed.xled.activity.ShowIcon"),
-							PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-							PackageManager.DONT_KILL_APP);
-				}
+                String key = preference.getKey();
+                if (key.equals("pref_screenon_enable")) {
+                    Intent intent = new Intent("com.haoutil.xposed.xled.UPDATE_SCREENON_LED");
+                    intent.putExtra("enable", (Boolean) newValue);
+                    SettingsActivity.this.sendBroadcast(intent);
+                } else if (key.equals("pref_icon")) {
+                    getPackageManager().setComponentEnabledSetting(
+                            new ComponentName(SettingsActivity.this, "com.haoutil.xposed.xled.activity.ShowIcon"),
+                            ((Boolean) newValue) ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                            PackageManager.DONT_KILL_APP);
+                }
 				
 				return true;
 			}
@@ -70,8 +74,10 @@ public class SettingsActivity extends Activity {
 			addPreferencesFromResource(R.xml.preferences);
 			
 			getPreferenceManager().findPreference("pref_app_config").setOnPreferenceClickListener(onPreferenceClickListener);
-			getPreferenceManager().findPreference("pref_app_info").setSummary("Version: v" + versionName + "\nAuthor: Harv Chen(ch05042210@gmail.com)");
-			getPreferenceManager().findPreference("pref_icon").setOnPreferenceChangeListener(onPreferenceChangeListener);
+            getPreferenceManager().findPreference("pref_charging_led").setOnPreferenceClickListener(onPreferenceClickListener);
+            getPreferenceManager().findPreference("pref_screenon_enable").setOnPreferenceChangeListener(onPreferenceChangeListener);
+            getPreferenceManager().findPreference("pref_icon").setOnPreferenceChangeListener(onPreferenceChangeListener);
+			getPreferenceManager().findPreference("pref_app_info").setSummary(getString(R.string.app_info_sum).replace("#version#", versionName));
 		}
 	}
 }

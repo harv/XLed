@@ -19,6 +19,12 @@
     <PreferenceCategory
         android:key="pref_menu_config"
         android:title="@string/menu_config" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_forceenable"
+            android:persistent="false"
+            android:summary="@string/app_forceenable_sum"
+            android:title="@string/app_forceenable_title" />
         <Preference
             android:key="pref_color"
             android:summary="@string/app_led_color_sum"

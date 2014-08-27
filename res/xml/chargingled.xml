@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="pref_menu_switcher"
+        android:title="@string/menu_switcher">
+        <CheckBoxPreference
+            android:key="pref_charging_enable"
+            android:summary="@string/charging_enable_sum"
+            android:title="@string/charging_enable_title" />
+        <CheckBoxPreference
+            android:enabled="false"
+            android:key="pref_low_disable"
+            android:summary="@string/low_disable_sum"
+            android:title="@string/low_disable_title" />
+        <CheckBoxPreference
+            android:enabled="false"
+            android:key="pref_charging_low_disable"
+            android:summary="@string/charging_low_disable_sum"
+            android:title="@string/charging_low_disable_title" />
+        <CheckBoxPreference
+            android:enabled="false"
+            android:key="pref_charging_medium_disable"
+            android:summary="@string/charging_medium_disable_sum"
+            android:title="@string/charging_medium_disable_title" />
+        <CheckBoxPreference
+            android:enabled="false"
+            android:key="pref_charging_full_disable"
+            android:summary="@string/charging_full_disable_sum"
+            android:title="@string/charging_full_disable_title" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_menu_switcher"
+        android:title="@string/menu_config">
+        <Preference
+            android:key="pref_charging_low_color"
+            android:summary="@string/charging_low_color_sum"
+            android:title="@string/charging_low_color_title" />
+        <Preference
+            android:key="pref_charging_medium_color"
+            android:summary="@string/charging_medium_color_sum"
+            android:title="@string/charging_medium_color_title" />
+        <Preference
+            android:key="pref_charging_full_color"
+            android:summary="@string/charging_full_color_sum"
+            android:title="@string/charging_full_color_title" />
+        <com.haoutil.xposed.xled.model.IntEditTextPreference
+            android:defaultValue="300"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:key="pref_charging_onms"
+            android:summary="@string/charging_onms_sum"
+            android:title="@string/charging_onms_title" />
+        <com.haoutil.xposed.xled.model.IntEditTextPreference
+            android:defaultValue="1000"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:key="pref_charging_offms"
+            android:summary="@string/charging_offms_sum"
+            android:title="@string/charging_offms_title" />
+    </PreferenceCategory>
+</PreferenceScreen>
