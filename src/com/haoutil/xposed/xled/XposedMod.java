@@ -172,12 +172,24 @@ public class XposedMod implements IXposedHookZygoteInit {
                 Logger.log(TAG, "enable change charging LED");
 
                 boolean turnOffLed = false;
-                Object catteryService = XposedHelpers.getSurroundingThis(param.thisObject);
+                int level, status;
+                
+                Object batteryService = XposedHelpers.getSurroundingThis(param.thisObject);
+                try {	// android 4.3 and below
+                	level = XposedHelpers.getIntField(batteryService, "mBatteryLevel");
+                	status = XposedHelpers.getIntField(batteryService, "mBatteryStatus");
+                } catch (Exception e) {
+                	try {	// android 4.4 and above
+                	Object batteryProps = XposedHelpers.getObjectField(batteryService, "mBatteryProps");
+                	level = XposedHelpers.getIntField(batteryProps, "batteryLevel");
+                	status = XposedHelpers.getIntField(batteryProps, "batteryStatus");
+                	} catch (Exception e1) {
+                		 Logger.log(TAG, "can not get battery status, break.");
+                		return;
+                	}
+                }
 
-                int level = XposedHelpers.getIntField(catteryService, "mBatteryLevel");
-                int status = XposedHelpers.getIntField(catteryService, "mBatteryStatus");
-
-                if (level < XposedHelpers.getIntField(catteryService, "mLowBatteryWarningLevel")) {
+                if (level < XposedHelpers.getIntField(batteryService, "mLowBatteryWarningLevel")) {
                     if (status == BatteryManager.BATTERY_STATUS_CHARGING && settingsHelper.getBoolean("pref_charging_low_disable", false)
                             || settingsHelper.getBoolean("pref_low_disable", false)) {
                         turnOffLed = true;

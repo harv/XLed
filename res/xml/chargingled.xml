@@ -30,7 +30,7 @@
             android:title="@string/charging_full_disable_title" />
     </PreferenceCategory>
     <PreferenceCategory
-        android:key="pref_menu_switcher"
+        android:key="pref_menu_config"
         android:title="@string/menu_config">
         <Preference
             android:key="pref_charging_low_color"
