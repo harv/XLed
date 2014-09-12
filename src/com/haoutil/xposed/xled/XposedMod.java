@@ -178,12 +178,12 @@ public class XposedMod implements IXposedHookZygoteInit {
                 try {	// android 4.3 and below
                 	level = XposedHelpers.getIntField(batteryService, "mBatteryLevel");
                 	status = XposedHelpers.getIntField(batteryService, "mBatteryStatus");
-                } catch (Exception e) {
+                } catch (Throwable t) {
                 	try {	// android 4.4 and above
-                	Object batteryProps = XposedHelpers.getObjectField(batteryService, "mBatteryProps");
-                	level = XposedHelpers.getIntField(batteryProps, "batteryLevel");
-                	status = XposedHelpers.getIntField(batteryProps, "batteryStatus");
-                	} catch (Exception e1) {
+                    	Object batteryProps = XposedHelpers.getObjectField(batteryService, "mBatteryProps");
+                    	level = XposedHelpers.getIntField(batteryProps, "batteryLevel");
+                    	status = XposedHelpers.getIntField(batteryProps, "batteryStatus");
+                	} catch (Throwable t1) {
                 		 Logger.log(TAG, "can not get battery status, break.");
                 		return;
                 	}
