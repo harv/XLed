@@ -1,7 +1,11 @@
 package com.haoutil.xposed.xled.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,13 +28,13 @@ import com.larswerkman.holocolorpicker.SaturationBar;
 
 public class ColorPickerActivity extends Activity implements OnTouchListener, OnColorChangedListener, OnClickListener, TextWatcher {
 	private InputMethodManager imm;
-	
+
 	private ColorPicker picker;
     private SaturationBar saturationBar;
     private SVBar svBar;
 	private OpacityBar opacityBar;
 	private EditText tv_newColor;
-	private Button bt_commit;
+	private Button bt_test, bt_commit;
 
     private int requestCode;
 
@@ -40,14 +44,15 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
 		setContentView(R.layout.color_picker);
 
 		imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-		
+
 		picker = (ColorPicker) findViewById(R.id.picker);
         saturationBar = (SaturationBar) findViewById(R.id.saturationBar);
         svBar = (SVBar) findViewById(R.id.svbar);
 		opacityBar = (OpacityBar) findViewById(R.id.opacitybar);
 		tv_newColor = (EditText) findViewById(R.id.tv_newColor);
 		bt_commit = (Button) findViewById(R.id.bt_commit);
-		
+        bt_test = (Button) findViewById(R.id.bt_test);
+
 		picker.setOnTouchListener(this);
 		picker.setOnColorChangedListener(this);
         picker.addSaturationBar(saturationBar);
@@ -58,7 +63,7 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
 		picker.setOldCenterColor(originColor);
 
         requestCode = getIntent().getIntExtra("requestCode", 0);
-		
+
 		if (originColor == Color.TRANSPARENT) {
 			originColor = Color.BLUE;
 		}
@@ -67,19 +72,20 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
         saturationBar.setOnTouchListener(this);
         svBar.setOnTouchListener(this);
         opacityBar.setOnTouchListener(this);
-		
+
 		tv_newColor.setText(String.format("#%08X", (0xFFFFFFFF & originColor)));
 		tv_newColor.addTextChangedListener(this);
 
 		bt_commit.setOnClickListener(this);
+        bt_test.setOnClickListener(this);
 	}
-	
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			hideSoftKeyBoard();
 		}
-		
+
 		return super.onTouchEvent(event);
 	}
 
@@ -89,7 +95,7 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			hideSoftKeyBoard();
 		}
-		
+
 		return false;
 	}
 
@@ -104,12 +110,42 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
 	// OnClickListener implementation
 	@Override
 	public void onClick(View v) {
-		Intent intent = new Intent();
-		intent.putExtra("color", tv_newColor.getText().toString());
-		intent.putExtra("requestCode", requestCode);
-		ColorPickerActivity.this.setResult(RESULT_OK, intent);
-		
-		ColorPickerActivity.this.finish();
+        switch (v.getId()) {
+            case  R.id.bt_test:
+                Notification notification = new Notification();
+                notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+                notification.ledARGB = Color.parseColor(tv_newColor.getText().toString());
+                notification.ledOnMS = 300;
+                notification.ledOffMS = 1000;
+
+                final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(0, notification);
+
+                new AlertDialog.Builder(ColorPickerActivity.this)
+                        .setMessage(getString(R.string.test_new_color_message))
+                        .setPositiveButton(R.string.test_new_color_close, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                                dialog.cancel();
+                            }
+                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialogInterface) {
+                                notificationManager.cancel(0);
+                            }
+                        }).show();
+
+                break;
+            case R.id.bt_commit:
+                Intent intent = new Intent();
+                intent.putExtra("color", tv_newColor.getText().toString());
+                intent.putExtra("requestCode", requestCode);
+                ColorPickerActivity.this.setResult(RESULT_OK, intent);
+
+                ColorPickerActivity.this.finish();
+
+                break;
+        }
 	}
 
 	// TextWatcher implementation
@@ -127,7 +163,7 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
 			} catch (Exception e) {}
 		}
 	}
-	
+
 	private void hideSoftKeyBoard() {
 		if (tv_newColor.isFocused()) {
 			tv_newColor.clearFocus();

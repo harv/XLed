@@ -73,7 +73,10 @@ public class XposedMod implements IXposedHookZygoteInit {
             }
         };
         XposedHelpers.findAndHookMethod(NotificationManager.class, "notify", new Object[] {String.class, Integer.TYPE, Notification.class, hook});
-        XposedHelpers.findAndHookMethod(NotificationManager.class, "notifyAsUser", new Object[] {String.class, Integer.TYPE, Notification.class, "android.os.UserHandle", hook});
+        try {   // android 4.2 and above
+            XposedHelpers.findAndHookMethod(NotificationManager.class, "notifyAsUser", new Object[]{String.class, Integer.TYPE, Notification.class, "android.os.UserHandle", hook});
+        } catch (Throwable t) {
+        }
 
         // screen on led
         XposedHelpers.findAndHookMethod("com.android.server.NotificationManagerService", null, "systemReady", new XC_MethodHook() {

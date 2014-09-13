@@ -60,35 +60,43 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dip"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/new_color_code" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/tv_newColor"
-            android:layout_width="120dip"
-            android:layout_height="wrap_content"
-            android:digits="#0123456789abcdefABCDEF"
-            android:inputType="text"
-            android:maxLength="9"
-            android:paddingLeft="5dip"
-            android:textColor="#FF000000"
-            android:textColorHighlight="#FF000000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/new_color_code" />
+
+            <EditText
+                android:id="@+id/tv_newColor"
+                android:layout_width="120dip"
+                android:layout_height="wrap_content"
+                android:digits="#0123456789abcdefABCDEF"
+                android:inputType="text"
+                android:maxLength="9" />
+
+            <Button
+                android:id="@+id/bt_test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/test_new_color" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/bt_commit"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dip"
             android:text="@string/commit_new_color" />
     </LinearLayout>
 
