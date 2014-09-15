@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:padding="10dip">
+    android:orientation="vertical">
 
     <com.larswerkman.holocolorpicker.ColorPicker
         android:id="@+id/picker"
@@ -62,7 +61,6 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dip"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
@@ -71,7 +69,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
-
 
             <TextView
                 android:layout_width="wrap_content"
