@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:key="pref_menu_switcher"
-        android:title="@string/menu_switcher">
+        android:title="@string/menu_switcher" >
         <CheckBoxPreference
             android:key="pref_charging_enable"
             android:summary="@string/charging_enable_sum"
@@ -31,7 +31,7 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_menu_config"
-        android:title="@string/menu_config">
+        android:title="@string/menu_config" >
         <Preference
             android:key="pref_charging_low_color"
             android:summary="@string/charging_low_color_sum"
@@ -44,11 +44,13 @@
             android:key="pref_charging_full_color"
             android:summary="@string/charging_full_color_sum"
             android:title="@string/charging_full_color_title" />
+
         <com.haoutil.xposed.xled.model.IntEditTextPreference
             android:defaultValue="300"
             android:digits="0123456789"
             android:inputType="number"
             android:key="pref_charging_onms"
+            android:maxLength="9"
             android:summary="@string/charging_onms_sum"
             android:title="@string/charging_onms_title" />
         <com.haoutil.xposed.xled.model.IntEditTextPreference
@@ -56,7 +58,9 @@
             android:digits="0123456789"
             android:inputType="number"
             android:key="pref_charging_offms"
+            android:maxLength="9"
             android:summary="@string/charging_offms_sum"
             android:title="@string/charging_offms_title" />
     </PreferenceCategory>
+
 </PreferenceScreen>

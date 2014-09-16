@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <PreferenceCategory
         android:key="pref_menu_switcher"
-        android:title="@string/menu_switcher">
+        android:title="@string/menu_switcher" >
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="pref_enable"
@@ -11,16 +12,18 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_menu_config"
-        android:title="@string/menu_config">
+        android:title="@string/menu_config" >
         <Preference
             android:key="pref_app_config"
             android:summary="@string/app_config_sum"
             android:title="@string/app_config_title" />
+
         <com.haoutil.xposed.xled.model.IntEditTextPreference
             android:defaultValue="300"
             android:digits="0123456789"
             android:inputType="number"
             android:key="pref_led_onms"
+            android:maxLength="9"
             android:summary="@string/led_onms_sum"
             android:title="@string/led_onms_title" />
         <com.haoutil.xposed.xled.model.IntEditTextPreference
@@ -28,16 +31,18 @@
             android:digits="0123456789"
             android:inputType="number"
             android:key="pref_led_offms"
+            android:maxLength="9"
             android:summary="@string/led_offms_sum"
             android:title="@string/led_offms_title" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_menu_misc"
-        android:title="@string/menu_misc">
+        android:title="@string/menu_misc" >
         <Preference
             android:key="pref_charging_led"
             android:summary="@string/charging_led_sum"
             android:title="@string/charging_led_title" />
+
         <CheckBoxPreference
             android:key="pref_screenon_enable"
             android:summary="@string/screenon_enable_sum"
@@ -54,10 +59,10 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_menu_about"
-        android:title="@string/menu_about">
+        android:title="@string/menu_about" >
         <Preference
             android:key="pref_app_info"
-            android:title="@string/app_info_title">
+            android:title="@string/app_info_title" >
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/app_info_mailto" />
@@ -65,10 +70,11 @@
         <Preference
             android:key="prefs_app_help"
             android:summary="@string/app_help_sum"
-            android:title="@string/app_help_title">
+            android:title="@string/app_help_title" >
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/app_help_url" />
         </Preference>
     </PreferenceCategory>
+
 </PreferenceScreen>

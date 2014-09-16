@@ -25,6 +25,7 @@
             android:persistent="false"
             android:summary="@string/app_forceenable_sum"
             android:title="@string/app_forceenable_title" />
+
         <Preference
             android:key="pref_color"
             android:summary="@string/app_led_color_sum"
@@ -35,6 +36,7 @@
             android:digits="0123456789"
             android:inputType="number"
             android:key="pref_onms"
+            android:maxLength="9"
             android:persistent="false"
             android:summary="@string/app_led_onms_sum"
             android:title="@string/app_led_onms_title" />
@@ -43,6 +45,7 @@
             android:digits="0123456789"
             android:inputType="number"
             android:key="pref_offms"
+            android:maxLength="9"
             android:persistent="false"
             android:summary="@string/app_led_offms_sum"
             android:title="@string/app_led_offms_title" />
