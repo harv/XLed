@@ -18,6 +18,7 @@ import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.haoutil.xposed.xled.R;
 import com.larswerkman.holocolorpicker.ColorPicker;
@@ -114,7 +115,12 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
             case  R.id.bt_test:
                 Notification notification = new Notification();
                 notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-                notification.ledARGB = Color.parseColor(tv_newColor.getText().toString());
+                try {
+                	notification.ledARGB = Color.parseColor(tv_newColor.getText().toString());
+                } catch (Exception e) {
+                	Toast.makeText(ColorPickerActivity.this, getString(R.string.tip_incorrect_colorformat), Toast.LENGTH_SHORT).show();
+                	break;
+				}
                 notification.ledOnMS = 300;
                 notification.ledOffMS = 1000;
 
