@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">XLED</string>
+    <string name="app_name" translatable="false">XLED</string>
     <string name="app_descirption">Custom LED notification settings for each application.</string>
     <string name="app_config_name">Application settings</string>
     <string name="charging_led_name">Charging LED settings</string>
@@ -16,16 +16,12 @@
     <string name="disable_led_sum">Check this option to disable app\'s default settings(The LED will not flashing).</string>
     <string name="app_config_title">Per-app settings</string>
     <string name="app_config_sum">Configure custom LED notification settings for each application.</string>
-    <string name="led_onms_title">Default LED on time</string>
-    <string name="led_onms_sum">The number of milliseconds for the LED to be on while it\'s flashing.</string>
-    <string name="led_offms_title">Default LED off time</string>
-    <string name="led_offms_sum">The number of milliseconds for the LED to be off while it\'s flashing.</string>
-    <string name="app_info_title">XLED</string>
-    <string name="app_info_sum">"Version: v#version#\nAuthor: Harv Chen(hzchenhao@gmail.com)\nClick to report issue via email.</string>
-    <string name="app_info_mailto">mailto:hzchenhao@gmail.com</string>
+    <string name="app_info_title" translatable="false">XLED</string>
+    <string name="app_info_sum">Version: v#version#\nAuthor: Harv Chen(hzchenhao@gmail.com)\nClick to report issue via email.</string>
+    <string name="app_info_mailto" translatable="false">mailto:hzchenhao@gmail.com</string>
     <string name="app_help_title">Support</string>
     <string name="app_help_sum">Get support and discuss at github.com</string>
-    <string name="app_help_url">https://github.com/Harv/XLed</string>
+    <string name="app_help_url" translatable="false">https://github.com/Harv/XLed</string>
     <string name="enable_icon_title">Show icon</string>
     <string name="enable_icon_sum">Show XLED icon in app drawer.</string>
     <string name="charging_led_title">Charging LED</string>
@@ -39,11 +35,11 @@
     <string name="app_forceenable_title">Force LED flashing</string>
     <string name="app_forceenable_sum">Force LED flashing even without LED notification by default.</string>
     <string name="app_led_color_title">LED color</string>
-    <string name="app_led_color_sum">The color for the LED while it\'s flashing.</string>
+    <string name="app_led_color_sum">The color for the LED while it\'s flashing.\nleave blank to use default value.</string>
     <string name="app_led_onms_title">LED on time</string>
-    <string name="app_led_onms_sum">The number of milliseconds for the LED to be on while it\'s flashing.</string>
+    <string name="app_led_onms_sum">The number of milliseconds for the LED to be on while it\'s flashing.\nleave blank to use default value.</string>
     <string name="app_led_offms_title">LED off time</string>
-    <string name="app_led_offms_sum">The number of milliseconds for the LED to be off while it\'s flashing.</string>
+    <string name="app_led_offms_sum">The number of milliseconds for the LED to be off while it\'s flashing.\nleave blank to use default value.</string>
     <string name="app_reset_title">Reset</string>
     <string name="app_reset_sum">Reset to default settings.</string>
     <string name="tip_reset">Reset succeed!</string>
@@ -52,7 +48,7 @@
     <string name="tip_incorrect_offmsformat">offms format is incorrect!\neg: 1000</string>
     <string name="new_color_code">Hex Code:</string>
     <string name="test_new_color">Test</string>
-    <string name="test_new_color_message">"You may should turn off screen or enable \"Screen on LED\" to activate LED blinking.\n\nPlease do not close this dialog before test is finished."</string>
+    <string name="test_new_color_message">You may should turn off screen or enable \"Screen on LED\" to activate LED blinking.\n\nPlease do not close this dialog before test is finished.</string>
     <string name="test_new_color_close">Close</string>
     <string name="commit_new_color">Apply</string>
     <string name="color_picker_name">Color Picker</string>
@@ -72,14 +68,14 @@
     <string name="charging_full_disable_title">Disable full battery LED(Charging)</string>
     <string name="charging_full_disable_sum">Disable LED when full or charging and nearly full.</string>
     <string name="charging_low_color_title">Low battery color</string>
-    <string name="charging_low_color_sum">The color for the LED when battery is low(charging and not charging)</string>
+    <string name="charging_low_color_sum">The color for the LED when battery is low(charging and not charging)\nleave blank to use default value.</string>
     <string name="charging_medium_color_title">Medium battery color</string>
-    <string name="charging_medium_color_sum">The color for the LED when charging and halfway full.</string>
+    <string name="charging_medium_color_sum">The color for the LED when charging and halfway full.\nleave blank to use default value.</string>
     <string name="charging_full_color_title">Full battery color</string>
-    <string name="charging_full_color_sum">The color for the LED when full or charging and nearly full.</string>
+    <string name="charging_full_color_sum">The color for the LED when full or charging and nearly full.\nleave blank to use default value.</string>
     <string name="charging_onms_title">On time</string>
-    <string name="charging_onms_sum">The number of milliseconds for the LED to be on while battery is low and not charging.</string>
+    <string name="charging_onms_sum">The number of milliseconds for the LED to be on while battery is low and not charging.\nleave blank to use default value.</string>
     <string name="charging_offms_title">Off time</string>
-    <string name="charging_offms_sum">The number of milliseconds for the LED to be off while battery is low and not charging.</string>
+    <string name="charging_offms_sum">The number of milliseconds for the LED to be off while battery is low and not charging.\nleave blank to use default value.</string>
 
 </resources>

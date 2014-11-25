@@ -9,9 +9,12 @@ import android.os.Message;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.haoutil.xposed.xled.R;
+import com.haoutil.xposed.xled.XposedMod;
+import com.haoutil.xposed.xled.model.IntEditTextPreference;
 import com.haoutil.xposed.xled.util.SettingsHelper;
 
 public class ChargingActivity extends Activity {
@@ -49,15 +52,15 @@ public class ChargingActivity extends Activity {
                 Intent intent = new Intent(ChargingActivity.this.getApplicationContext(), ColorPickerActivity.class);
                 String key = preference.getKey();
                 if (key.equals("pref_charging_low_color")) {
-                    intent.putExtra("originColor", settingsHelper.getInt(key, Color.RED));
+                    intent.putExtra("originColor", settingsHelper.getInt(key, XposedMod.DEFAULT_COLOR));
                     intent.putExtra("requestCode", 0);
                     ChargingActivity.this.startActivityForResult(intent, 0);
                 } else if (key.equals("pref_charging_medium_color")) {
-                    intent.putExtra("originColor", settingsHelper.getInt(key, 0xFFFF3000));
+                    intent.putExtra("originColor", settingsHelper.getInt(key, XposedMod.DEFAULT_COLOR));
                     intent.putExtra("requestCode", 1);
                     ChargingActivity.this.startActivityForResult(intent, 1);
                 } else if (key.equals("pref_charging_full_color")) {
-                    intent.putExtra("originColor", settingsHelper.getInt(key, Color.GREEN));
+                    intent.putExtra("originColor", settingsHelper.getInt(key, XposedMod.DEFAULT_COLOR));
                     intent.putExtra("requestCode", 2);
                     ChargingActivity.this.startActivityForResult(intent, 2);
                 }
@@ -89,8 +92,18 @@ public class ChargingActivity extends Activity {
                 } else if (key.equals("pref_charging_full_disable")) {
                     message.what = 14;
                 } else if (key.equals("pref_charging_onms")) {
+                    if (TextUtils.isEmpty(String.valueOf(o))) { // leave blank to use default value
+                        settingsHelper.remove(key);
+                        ((IntEditTextPreference) preference).setText("");
+                        return false;
+                    }
                     message.what = 3;
                 } else if (key.equals("pref_charging_offms")) {
+                    if (TextUtils.isEmpty(String.valueOf(o))) { // leave blank to use default value
+                        settingsHelper.remove(key);
+                        ((IntEditTextPreference) preference).setText("");
+                        return false;
+                    }
                     message.what = 4;
                 }
 
@@ -109,15 +122,27 @@ public class ChargingActivity extends Activity {
                 Message message = new Message();
                 switch (data.getIntExtra("requestCode", -1)) {
                     case 0:
-                        settingsHelper.setInt("pref_charging_low_color", Color.parseColor(data.getStringExtra("color")));
+                        if (TextUtils.isEmpty(data.getStringExtra("color"))) {  // leave blank to use default value
+                            settingsHelper.remove("pref_charging_low_color");
+                        } else {
+                            settingsHelper.setInt("pref_charging_low_color", Color.parseColor(data.getStringExtra("color")));
+                        }
                         message.what = 0;
                         break;
                     case 1:
-                        settingsHelper.setInt("pref_charging_medium_color", Color.parseColor(data.getStringExtra("color")));
+                        if (TextUtils.isEmpty(data.getStringExtra("color"))) {  // leave blank to use default value
+                            settingsHelper.remove("pref_charging_medium_color");
+                        } else {
+                            settingsHelper.setInt("pref_charging_medium_color", Color.parseColor(data.getStringExtra("color")));
+                        }
                         message.what = 1;
                         break;
                     case 2:
-                        settingsHelper.setInt("pref_charging_full_color", Color.parseColor(data.getStringExtra("color")));
+                        if (TextUtils.isEmpty(data.getStringExtra("color"))) {  // leave blank to use default value
+                            settingsHelper.remove("pref_charging_full_color");
+                        } else {
+                            settingsHelper.setInt("pref_charging_full_color", Color.parseColor(data.getStringExtra("color")));
+                        }
                         message.what = 2;
                         break;
                 }

@@ -46,7 +46,6 @@
             android:title="@string/charging_full_color_title" />
 
         <com.haoutil.xposed.xled.model.IntEditTextPreference
-            android:defaultValue="300"
             android:digits="0123456789"
             android:inputType="number"
             android:key="pref_charging_onms"

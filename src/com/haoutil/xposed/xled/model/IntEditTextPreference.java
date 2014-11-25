@@ -2,6 +2,7 @@ package com.haoutil.xposed.xled.model;
 
 import android.content.Context;
 import android.preference.EditTextPreference;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 
 public class IntEditTextPreference extends EditTextPreference {
@@ -24,6 +25,6 @@ public class IntEditTextPreference extends EditTextPreference {
 
 	@Override
 	protected boolean persistString(String value) {
-		return persistInt(Integer.valueOf(value));
+		return TextUtils.isEmpty(value) || persistInt(Integer.valueOf(value));
 	}
 }

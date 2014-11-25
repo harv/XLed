@@ -91,6 +91,20 @@ public class SettingsHelper {
 		}
 	}
 
+    public void remove(String key) {
+        Editor editor = null;
+        if (mPreferences != null) {
+            editor = mPreferences.edit();
+        } else if (mXPreferences != null) {
+            editor = mXPreferences.edit();
+        }
+
+        if (editor != null) {
+            editor.remove(key);
+            editor.commit();
+        }
+    }
+
     public boolean contains(String key) {
         if (mPreferences != null) {
             return mPreferences.contains(key);

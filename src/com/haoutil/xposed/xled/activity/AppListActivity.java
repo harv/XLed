@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.haoutil.xposed.xled.R;
+import com.haoutil.xposed.xled.XposedMod;
 import com.haoutil.xposed.xled.model.AppListItem;
 import com.haoutil.xposed.xled.model.SideBar;
 import com.haoutil.xposed.xled.model.SideBar.OnTouchingLetterChangedListener;
@@ -110,7 +111,7 @@ public class AppListActivity extends Activity {
 				String appName = appInfo.loadLabel(packageManager).toString();
 				String pinyin = characterParser.getSelling(appName).toUpperCase();
 				String packageName = appInfo.packageName;
-				int color = settingsHelper.getInt("pref_app_color_" + appInfo.packageName, Color.TRANSPARENT);
+				int color = settingsHelper.getInt("pref_app_color_" + appInfo.packageName, XposedMod.DEFAULT_COLOR);
 				
 				AppListItem app = new AppListItem(null, enable, disabledLED, icon, appName, pinyin, packageName, color);
 				
@@ -143,7 +144,7 @@ public class AppListActivity extends Activity {
 	private class loadAppListAdapterTask extends AsyncTask<Void, Void, Void> {
 		ProgressDialog dialog;
 		
-		private loadAppListAdapterTask() {};
+		private loadAppListAdapterTask() {}
 		
 		@Override
 		protected void onPreExecute() {
@@ -204,7 +205,7 @@ public class AppListActivity extends Activity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			AppListItem item = list.get(position);
-			View view = null;
+			View view;
 			if (convertView != null) {
 				view = convertView;
 			} else {

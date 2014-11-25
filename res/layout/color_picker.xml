@@ -77,7 +77,7 @@
 
             <EditText
                 android:id="@+id/tv_newColor"
-                android:layout_width="120dip"
+                android:layout_width="125dip"
                 android:layout_height="wrap_content"
                 android:digits="#0123456789abcdefABCDEF"
                 android:inputType="text"

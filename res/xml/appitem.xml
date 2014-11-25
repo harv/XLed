@@ -32,7 +32,6 @@
             android:title="@string/app_led_color_title" />
 
         <EditTextPreference
-            android:defaultValue="300"
             android:digits="0123456789"
             android:inputType="number"
             android:key="pref_onms"
@@ -41,7 +40,6 @@
             android:summary="@string/app_led_onms_sum"
             android:title="@string/app_led_onms_title" />
         <EditTextPreference
-            android:defaultValue="1000"
             android:digits="0123456789"
             android:inputType="number"
             android:key="pref_offms"

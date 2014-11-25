@@ -12,11 +12,18 @@ import android.os.BatteryManager;
 import com.haoutil.xposed.xled.util.Logger;
 import com.haoutil.xposed.xled.util.SettingsHelper;
 
+import java.util.Calendar;
+
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 
 public class XposedMod implements IXposedHookZygoteInit {
+    public final static int DEFAULT_COLOR = Color.TRANSPARENT;
+    public final static int INVALID_COLOR = 16777216;
+    public final static int INVALID_ONMS = -1;
+    public final static int INVALID_OFFMS = -1;
+
     private final static String TAG = "XLED";
 
     private static SettingsHelper settingsHelper;
@@ -64,18 +71,28 @@ public class XposedMod implements IXposedHookZygoteInit {
                 }
 
                 Logger.log(TAG, "changing led settings... {color:" + notification.ledARGB + ",onms:" + notification.ledOnMS + ",offms:" + notification.ledOffMS + "}");
-                notification.ledARGB = settingsHelper.getInt("pref_app_color_" + packageName, Color.TRANSPARENT);
-                notification.ledOnMS = settingsHelper.getInt("pref_app_onms_" + packageName, settingsHelper.getInt("pref_led_onms", 300));
-                notification.ledOffMS = settingsHelper.getInt("pref_app_offms_" + packageName, settingsHelper.getInt("pref_led_offms", 1000));
+                int color = settingsHelper.getInt("pref_app_color_" + packageName, INVALID_COLOR);
+                if (color != INVALID_COLOR) {
+                    notification.ledARGB = color;
+                }
+                int onms = settingsHelper.getInt("pref_app_onms_" + packageName, INVALID_ONMS);
+                if (onms != INVALID_ONMS) {
+                    notification.ledOnMS = onms;
+                }
+                int offms = settingsHelper.getInt("pref_app_offms_" + packageName, INVALID_OFFMS);
+                if (offms != INVALID_OFFMS) {
+                    notification.ledOffMS = offms;
+                }
                 Logger.log(TAG, "change led settings succeed {color:" + notification.ledARGB + ",onms:" + notification.ledOnMS + ",offms:" + notification.ledOffMS + "}");
 
                 param.args[2] = notification;
             }
         };
-        XposedHelpers.findAndHookMethod(NotificationManager.class, "notify", new Object[] {String.class, Integer.TYPE, Notification.class, hook});
+        XposedHelpers.findAndHookMethod(NotificationManager.class, "notify", String.class, Integer.TYPE, Notification.class, hook);
         try {   // android 4.2 and above
-            XposedHelpers.findAndHookMethod(NotificationManager.class, "notifyAsUser", new Object[]{String.class, Integer.TYPE, Notification.class, "android.os.UserHandle", hook});
+            XposedHelpers.findAndHookMethod(NotificationManager.class, "notifyAsUser", String.class, Integer.TYPE, Notification.class, "android.os.UserHandle", hook);
         } catch (Throwable t) {
+            Logger.log(TAG, "can not find NotificationManager.notifyAsUser().");
         }
 
         // screen on led
@@ -148,18 +165,11 @@ public class XposedMod implements IXposedHookZygoteInit {
 
         XposedHelpers.findAndHookMethod("com.android.server.BatteryService$Led", null, "updateLightsLocked", new XC_MethodHook() {
             @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 settingsHelper.reload();
 
                 if (!settingsHelper.getBoolean("pref_enable", true) || !settingsHelper.getBoolean("pref_charging_enable", false)) {
-                    if (defaultLed != null) {
-                        XposedHelpers.setIntField(param.thisObject, "mBatteryLowARGB", defaultLed[0]);
-                        XposedHelpers.setIntField(param.thisObject, "mBatteryMediumARGB", defaultLed[1]);
-                        XposedHelpers.setIntField(param.thisObject, "mBatteryFullARGB", defaultLed[2]);
-                        XposedHelpers.setIntField(param.thisObject, "mBatteryLedOn", defaultLed[3]);
-                        XposedHelpers.setIntField(param.thisObject, "mBatteryLedOff", defaultLed[4]);
-                    }
-
+                    Logger.log(TAG, "charging led disabled, break.");
                     return;
                 }
 
@@ -172,48 +182,99 @@ public class XposedMod implements IXposedHookZygoteInit {
                     defaultLed[4] = XposedHelpers.getIntField(param.thisObject, "mBatteryLedOff");
                 }
 
-                Logger.log(TAG, "enable change charging LED");
-
-                boolean turnOffLed = false;
                 int level, status;
-                
                 Object batteryService = XposedHelpers.getSurroundingThis(param.thisObject);
-                try {	// android 4.3 and below
-                	level = XposedHelpers.getIntField(batteryService, "mBatteryLevel");
-                	status = XposedHelpers.getIntField(batteryService, "mBatteryStatus");
+                try {    // android 4.3 and below
+                    level = XposedHelpers.getIntField(batteryService, "mBatteryLevel");
+                    status = XposedHelpers.getIntField(batteryService, "mBatteryStatus");
                 } catch (Throwable t) {
-                	try {	// android 4.4 and above
-                    	Object batteryProps = XposedHelpers.getObjectField(batteryService, "mBatteryProps");
-                    	level = XposedHelpers.getIntField(batteryProps, "batteryLevel");
-                    	status = XposedHelpers.getIntField(batteryProps, "batteryStatus");
-                	} catch (Throwable t1) {
-                		 Logger.log(TAG, "can not get battery status, break.");
-                		return;
-                	}
-                }
-
-                if (level < XposedHelpers.getIntField(batteryService, "mLowBatteryWarningLevel")) {
-                    if (status == BatteryManager.BATTERY_STATUS_CHARGING && settingsHelper.getBoolean("pref_charging_low_disable", false)
-                            || settingsHelper.getBoolean("pref_low_disable", false)) {
-                        turnOffLed = true;
+                    try {    // android 4.4 and above
+                        Object batteryProps = XposedHelpers.getObjectField(batteryService, "mBatteryProps");
+                        level = XposedHelpers.getIntField(batteryProps, "batteryLevel");
+                        status = XposedHelpers.getIntField(batteryProps, "batteryStatus");
+                    } catch (Throwable t1) {
+                        Logger.log(TAG, "can not get battery status, break.");
+                        return;
                     }
-                } else if ((status == BatteryManager.BATTERY_STATUS_FULL || level >= 90) && settingsHelper.getBoolean("pref_charging_full_disable", false)
-                        || status == BatteryManager.BATTERY_STATUS_CHARGING && settingsHelper.getBoolean("pref_charging_medium_disable", false)) {
-                    turnOffLed = true;
                 }
 
-                if (turnOffLed) {
-                    Logger.log(TAG, "disable charging led.");
-                    XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mBatteryLight"), "turnOff");
+                // for SamSung
+                boolean mScreenOn, mLedChargingSettingsEnable, mDormantOn;
+                try {
+                    mScreenOn = XposedHelpers.getBooleanField(batteryService, "mScreenOn");
+                    mLedChargingSettingsEnable = XposedHelpers.getBooleanField(batteryService, "mLedChargingSettingsEnable");
+                    mDormantOn = false;
+                    if (XposedHelpers.getBooleanField(batteryService, "mDormantOnOff")) {
+                        if (XposedHelpers.getBooleanField(batteryService, "mDormantDisableLED")) {
+                            if (XposedHelpers.getBooleanField(batteryService, "mDormantAlways")) {
+                                Logger.log(TAG, "(SamSung)Dormant mode is always on, break.");
+                                mDormantOn = true;
+                            } else {
+                                Calendar calendar = Calendar.getInstance();
+                                int m = 60 * calendar.get(Calendar.HOUR_OF_DAY) + calendar.get(Calendar.MINUTE);
+                                int mDormantStartMinutes = XposedHelpers.getIntField(batteryService, "mDormantStartMinutes");
+                                int mDormantEndMinutes = XposedHelpers.getIntField(batteryService, "mDormantEndMinutes");
+                                if ((mDormantStartMinutes <= mDormantEndMinutes && mDormantStartMinutes <= m && m < mDormantEndMinutes)
+                                        || (mDormantStartMinutes > mDormantEndMinutes && (mDormantStartMinutes <= m || m < mDormantEndMinutes))) {
+                                    Logger.log(TAG, "(SamSung)Dormant mode is on, break.");
+                                    mDormantOn = true;
+                                }
+                            }
+                        }
+                    }
+                } catch (Throwable t) {
+                    mScreenOn = false;
+                    mLedChargingSettingsEnable = true;
+                    mDormantOn = false;
+                }
 
-                    param.setResult(null);
+                Object mBatteryLight = XposedHelpers.getObjectField(param.thisObject, "mBatteryLight");
+                if (!mScreenOn && mLedChargingSettingsEnable && !mDormantOn) {
+                    if (level < XposedHelpers.getIntField(batteryService, "mLowBatteryWarningLevel")) {
+                        if (settingsHelper.getBoolean("pref_low_disable", false) || settingsHelper.getBoolean("pref_charging_low_disable", false)) {
+                            Logger.log(TAG, "low battery led disabled, turnoff.");
+                            XposedHelpers.callMethod(mBatteryLight, "turnOff");
+                        } else {
+                            if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
+                                Logger.log(TAG, "setting low battery led(charging)...");
+                                XposedHelpers.callMethod(mBatteryLight, "setColor", settingsHelper.getInt("pref_charging_low_color", defaultLed[0]));
+                            } else {
+                                Logger.log(TAG, "setting low battery led(not charging)...");
+                                XposedHelpers.callMethod(
+                                        mBatteryLight,
+                                        "setFlashing",
+                                        settingsHelper.getInt("pref_charging_low_color", defaultLed[0]),
+                                        XposedHelpers.getStaticIntField(XposedHelpers.findClass("com.android.server.LightsService", null), "LIGHT_FLASH_TIMED"),
+                                        settingsHelper.getInt("pref_charging_onms", defaultLed[3]),
+                                        settingsHelper.getInt("pref_charging_offms", defaultLed[4])
+                                );
+                            }
+                        }
+                    } else if (status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL) {
+                        if (status == BatteryManager.BATTERY_STATUS_FULL || level >= 90) {
+                            if (settingsHelper.getBoolean("pref_charging_full_disable", false)) {
+                                Logger.log(TAG, "full battery led disabled, turnoff.");
+                                XposedHelpers.callMethod(mBatteryLight, "turnOff");
+                            } else {
+                                Logger.log(TAG, "setting full battery led...");
+                                XposedHelpers.callMethod(mBatteryLight, "setColor", settingsHelper.getInt("pref_charging_full_color", defaultLed[2]));
+                            }
+                        } else {
+                            if (settingsHelper.getBoolean("pref_charging_medium_disable", false)) {
+                                Logger.log(TAG, "medium battery led disabled, turnoff.");
+                                XposedHelpers.callMethod(mBatteryLight, "turnOff");
+                            } else {
+                                Logger.log(TAG, "setting medium battery led...");
+                                XposedHelpers.callMethod(mBatteryLight, "setColor", settingsHelper.getInt("pref_charging_medium_color", defaultLed[1]));
+                            }
+                        }
+                    } else {
+                        Logger.log(TAG, "turnoff charging led.");
+                        XposedHelpers.callMethod(mBatteryLight, "turnOff");
+                    }
                 } else {
-                    Logger.log(TAG, "change charging led.");
-                    XposedHelpers.setIntField(param.thisObject, "mBatteryLowARGB", settingsHelper.getInt("pref_charging_low_color", defaultLed[0]));
-                    XposedHelpers.setIntField(param.thisObject, "mBatteryMediumARGB", settingsHelper.getInt("pref_charging_medium_color", defaultLed[1]));
-                    XposedHelpers.setIntField(param.thisObject, "mBatteryFullARGB", settingsHelper.getInt("pref_charging_full_color", defaultLed[2]));
-                    XposedHelpers.setIntField(param.thisObject, "mBatteryLedOn", settingsHelper.getInt("pref_charging_onms", defaultLed[3]));
-                    XposedHelpers.setIntField(param.thisObject, "mBatteryLedOff", settingsHelper.getInt("pref_charging_offms", defaultLed[4]));
+                    Logger.log(TAG, "(SamSung)charging led disabled, turnoff.");
+                    XposedHelpers.callMethod(mBatteryLight, "turnOff");
                 }
             }
         });

@@ -11,9 +11,11 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.haoutil.xposed.xled.R;
+import com.haoutil.xposed.xled.XposedMod;
 import com.haoutil.xposed.xled.util.SettingsHelper;
 
 public class AppItemActivity extends Activity {
@@ -62,16 +64,16 @@ public class AppItemActivity extends Activity {
 		
 		enable = settingsHelper.getBoolean("pref_app_enable_" + packageName, false);
 		disableDefault = settingsHelper.getBoolean("pref_app_disableled_" + packageName, false);
-        forceEnable = settingsHelper.getBoolean("pref_app_forceenable_" + packageName, true);
-		color = settingsHelper.getInt("pref_app_color_" + packageName, Color.TRANSPARENT);
-		onms = settingsHelper.getInt("pref_app_onms_" + packageName, settingsHelper.getInt("pref_led_onms", 300));
-		offms = settingsHelper.getInt("pref_app_offms_" + packageName, settingsHelper.getInt("pref_led_offms", 1000));
+        forceEnable = settingsHelper.getBoolean("pref_app_forceenable_" + packageName, false);
+		color = settingsHelper.getInt("pref_app_color_" + packageName, XposedMod.INVALID_COLOR);
+		onms = settingsHelper.getInt("pref_app_onms_" + packageName, XposedMod.INVALID_ONMS);
+		offms = settingsHelper.getInt("pref_app_offms_" + packageName, XposedMod.INVALID_OFFMS);
 		
 		onColorClickListener = new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				Intent intent = new Intent(AppItemActivity.this.getApplicationContext(), ColorPickerActivity.class);
-				intent.putExtra("originColor", color);
+				intent.putExtra("originColor", settingsHelper.getInt("pref_app_color_" + packageName, XposedMod.DEFAULT_COLOR));
 				AppItemActivity.this.startActivityForResult(intent, 0);
 				
 				return false;
@@ -81,13 +83,16 @@ public class AppItemActivity extends Activity {
 		onResetClickListener = new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-                color = Color.TRANSPARENT;
-                onms = 300;
-                offms = 1000;
+                color = XposedMod.INVALID_COLOR;
+                onms = XposedMod.INVALID_ONMS;
+                offms = XposedMod.INVALID_OFFMS;
 
-				settingsHelper.setInt("pref_app_color_" + packageName, color);
-				settingsHelper.setInt("pref_app_onms_" + packageName, onms);
-				settingsHelper.setInt("pref_app_offms_" + packageName, offms);
+				settingsHelper.remove("pref_app_color_" + packageName);
+				settingsHelper.remove("pref_app_onms_" + packageName);
+				settingsHelper.remove("pref_app_offms_" + packageName);
+
+                prefOnms.setText("");
+                prefOffms.setText("");
 
 				Toast.makeText(AppItemActivity.this, getString(R.string.tip_reset), Toast.LENGTH_SHORT).show();
 				
@@ -101,7 +106,7 @@ public class AppItemActivity extends Activity {
 		Intent intent = new Intent();
 		intent.putExtra("enable", settingsHelper.getBoolean("pref_app_enable_" + packageName, false));
 		intent.putExtra("disableLED", settingsHelper.getBoolean("pref_app_disableled_" + packageName, false));
-		intent.putExtra("color", settingsHelper.getInt("pref_app_color_" + packageName, Color.TRANSPARENT));
+		intent.putExtra("color", settingsHelper.getInt("pref_app_color_" + packageName, XposedMod.DEFAULT_COLOR));
 		AppItemActivity.this.setResult(RESULT_OK, intent);
 		
 		super.onBackPressed();
@@ -111,12 +116,17 @@ public class AppItemActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		
 		if (resultCode == RESULT_OK) {
-			try {
-				color = Color.parseColor(data.getStringExtra("color"));
-				settingsHelper.setInt("pref_app_color_" + packageName, color);
-			} catch (Exception e) {
-				Toast.makeText(mContext, getString(R.string.tip_incorrect_colorformat), Toast.LENGTH_SHORT).show();
-			}
+            String sColor = data.getStringExtra("color");
+            if (TextUtils.isEmpty(sColor)) {    // leave blank to use default value
+                settingsHelper.remove("pref_app_color_" + packageName);
+            } else {
+                try {
+                    color = Color.parseColor(sColor);
+                    settingsHelper.setInt("pref_app_color_" + packageName, color);
+                } catch (Exception e) {
+                    Toast.makeText(mContext, getString(R.string.tip_incorrect_colorformat), Toast.LENGTH_SHORT).show();
+                }
+            }
 		}
 	}
 	
@@ -174,34 +184,47 @@ public class AppItemActivity extends Activity {
 			prefColor.setOnPreferenceClickListener(onColorClickListener);
 			
 			prefOnms = (EditTextPreference) getPreferenceManager().findPreference("pref_onms");
-			prefOnms.setText(String.valueOf(onms));
+            if (onms != XposedMod.INVALID_ONMS) {
+                prefOnms.setText(String.valueOf(onms));
+            }
 			prefOnms.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					String onms = (String) newValue;
-					try {
-						settingsHelper.setInt("pref_app_onms_" + packageName, Integer.parseInt(onms));
-						prefOnms.setText(onms);
-					} catch (Exception e) {
-						Toast.makeText(mContext, getString(R.string.tip_incorrect_onmsformat), Toast.LENGTH_SHORT).show();
-					}
-					
+                    if (TextUtils.isEmpty(onms)) {  // leave blank to use default value
+                        settingsHelper.remove("pref_app_onms_" + packageName);
+                        prefOnms.setText("");
+                    } else {
+                        try {
+                            settingsHelper.setInt("pref_app_onms_" + packageName, Integer.parseInt(onms));
+                            prefOnms.setText(onms);
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, getString(R.string.tip_incorrect_onmsformat), Toast.LENGTH_SHORT).show();
+                        }
+                    }
 					return false;
 				}
 			});
 			
 			prefOffms = (EditTextPreference) getPreferenceManager().findPreference("pref_offms");
-			prefOffms.setText(String.valueOf(offms));
+            if (offms != XposedMod.INVALID_OFFMS) {
+                prefOffms.setText(String.valueOf(offms));
+            }
 			prefOffms.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					String offms = (String) newValue;
-					try {
-						settingsHelper.setInt("pref_app_offms_" + packageName, Integer.parseInt(offms));
-						prefOffms.setText(offms);
-					} catch (Exception e) {
-						Toast.makeText(mContext, getString(R.string.tip_incorrect_offmsformat), Toast.LENGTH_SHORT).show();
-					}
+                    if (TextUtils.isEmpty(offms)) { // leave blank to use default value
+                        settingsHelper.remove("pref_app_offms_" + packageName);
+                        prefOffms.setText("");
+                    } else {
+                        try {
+                            settingsHelper.setInt("pref_app_offms_" + packageName, Integer.parseInt(offms));
+                            prefOffms.setText(offms);
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, getString(R.string.tip_incorrect_offmsformat), Toast.LENGTH_SHORT).show();
+                        }
+                    }
 					return false;
 				}
 			});
