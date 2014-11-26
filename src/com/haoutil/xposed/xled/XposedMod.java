@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.BatteryManager;
 
+import com.haoutil.xposed.xled.model.TimePreference;
 import com.haoutil.xposed.xled.util.Logger;
 import com.haoutil.xposed.xled.util.SettingsHelper;
 
@@ -44,46 +45,54 @@ public class XposedMod implements IXposedHookZygoteInit {
                     return;
                 }
 
-                String packageName = ((Context) XposedHelpers.getObjectField(param.thisObject, "mContext")).getPackageName();
-                if (packageName.equals("com.haoutil.xposed.xled") || !settingsHelper.getBoolean("pref_app_enable_" + packageName, false)) {
-                    return;
-                }
-
-                Logger.log(TAG, "handle package " + packageName);
-
                 Notification notification = (Notification) param.args[2];
-                if ((notification.defaults & Notification.DEFAULT_LIGHTS) == Notification.DEFAULT_LIGHTS) {
-                    Logger.log(TAG, "ignore default led settings(Notification.DEFAULT_LIGHTS).");
-                    notification.defaults &= ~(~notification.defaults | Notification.DEFAULT_LIGHTS);
-                    notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-                }
+                if (isSleeping()) {
+                    Logger.log(TAG, "sleep mode is on, disable all led notifications.");
+                    if ((notification.defaults & Notification.DEFAULT_LIGHTS) == Notification.DEFAULT_LIGHTS) {
+                        notification.defaults &= ~(~notification.defaults | Notification.DEFAULT_LIGHTS);
+                    } else if ((notification.flags & Notification.FLAG_SHOW_LIGHTS) == Notification.FLAG_SHOW_LIGHTS) {
+                        notification.flags &= ~(~notification.flags | Notification.FLAG_SHOW_LIGHTS);
+                    }
+                } else {
+                    String packageName = ((Context) XposedHelpers.getObjectField(param.thisObject, "mContext")).getPackageName();
+                    if (!settingsHelper.getBoolean("pref_app_enable_" + packageName, false)) {
+                        return;
+                    }
 
-                if (settingsHelper.getBoolean("pref_app_disableled_" + packageName, false)) {
-                    Logger.log(TAG, "disable led flashing.");
-                    notification.flags &= ~(~notification.flags | Notification.FLAG_SHOW_LIGHTS);
-                    return;
-                }
+                    Logger.log(TAG, "handle package " + packageName);
 
-                if ((notification.flags & Notification.FLAG_SHOW_LIGHTS) != Notification.FLAG_SHOW_LIGHTS
-                        && settingsHelper.getBoolean("pref_app_forceenable_" + packageName, true)) {
-                    Logger.log(TAG, "force led flashing.");
-                    notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-                }
+                    if ((notification.defaults & Notification.DEFAULT_LIGHTS) == Notification.DEFAULT_LIGHTS) {
+                        Logger.log(TAG, "ignore default led settings(Notification.DEFAULT_LIGHTS).");
+                        notification.defaults &= ~(~notification.defaults | Notification.DEFAULT_LIGHTS);
+                        notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+                    }
 
-                Logger.log(TAG, "changing led settings... {color:" + notification.ledARGB + ",onms:" + notification.ledOnMS + ",offms:" + notification.ledOffMS + "}");
-                int color = settingsHelper.getInt("pref_app_color_" + packageName, INVALID_COLOR);
-                if (color != INVALID_COLOR) {
-                    notification.ledARGB = color;
+                    if (settingsHelper.getBoolean("pref_app_disableled_" + packageName, false)) {
+                        Logger.log(TAG, "disable led flashing.");
+                        notification.flags &= ~(~notification.flags | Notification.FLAG_SHOW_LIGHTS);
+                    } else {
+                        if ((notification.flags & Notification.FLAG_SHOW_LIGHTS) != Notification.FLAG_SHOW_LIGHTS
+                                && settingsHelper.getBoolean("pref_app_forceenable_" + packageName, true)) {
+                            Logger.log(TAG, "force led flashing.");
+                            notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+                        }
+
+                        Logger.log(TAG, "changing led settings... {color:" + notification.ledARGB + ",onms:" + notification.ledOnMS + ",offms:" + notification.ledOffMS + "}");
+                        int color = settingsHelper.getInt("pref_app_color_" + packageName, INVALID_COLOR);
+                        if (color != INVALID_COLOR) {
+                            notification.ledARGB = color;
+                        }
+                        int onms = settingsHelper.getInt("pref_app_onms_" + packageName, INVALID_ONMS);
+                        if (onms != INVALID_ONMS) {
+                            notification.ledOnMS = onms;
+                        }
+                        int offms = settingsHelper.getInt("pref_app_offms_" + packageName, INVALID_OFFMS);
+                        if (offms != INVALID_OFFMS) {
+                            notification.ledOffMS = offms;
+                        }
+                        Logger.log(TAG, "change led settings succeed {color:" + notification.ledARGB + ",onms:" + notification.ledOnMS + ",offms:" + notification.ledOffMS + "}");
+                    }
                 }
-                int onms = settingsHelper.getInt("pref_app_onms_" + packageName, INVALID_ONMS);
-                if (onms != INVALID_ONMS) {
-                    notification.ledOnMS = onms;
-                }
-                int offms = settingsHelper.getInt("pref_app_offms_" + packageName, INVALID_OFFMS);
-                if (offms != INVALID_OFFMS) {
-                    notification.ledOffMS = offms;
-                }
-                Logger.log(TAG, "change led settings succeed {color:" + notification.ledARGB + ",onms:" + notification.ledOnMS + ",offms:" + notification.ledOffMS + "}");
 
                 param.args[2] = notification;
             }
@@ -168,10 +177,23 @@ public class XposedMod implements IXposedHookZygoteInit {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 settingsHelper.reload();
 
-                if (!settingsHelper.getBoolean("pref_enable", true) || !settingsHelper.getBoolean("pref_charging_enable", false)) {
-                    Logger.log(TAG, "charging led disabled, break.");
+                if (!settingsHelper.getBoolean("pref_enable", true)) {
                     return;
                 }
+
+                Object mBatteryLight = XposedHelpers.getObjectField(param.thisObject, "mBatteryLight");
+
+                if (isSleeping()) {
+                    Logger.log(TAG, "sleep mode is on, disable charging led.");
+                    XposedHelpers.callMethod(mBatteryLight, "turnOff");
+                    return;
+                }
+
+                if (!settingsHelper.getBoolean("pref_charging_enable", false)) {
+                    return;
+                }
+
+                Logger.log(TAG, "update charging led.");
 
                 if (defaultLed == null) {
                     defaultLed = new int[5];
@@ -228,7 +250,6 @@ public class XposedMod implements IXposedHookZygoteInit {
                     mDormantOn = false;
                 }
 
-                Object mBatteryLight = XposedHelpers.getObjectField(param.thisObject, "mBatteryLight");
                 if (!mScreenOn && mLedChargingSettingsEnable && !mDormantOn) {
                     if (level < XposedHelpers.getIntField(batteryService, "mLowBatteryWarningLevel")) {
                         if (settingsHelper.getBoolean("pref_low_disable", false) || settingsHelper.getBoolean("pref_charging_low_disable", false)) {
@@ -278,5 +299,29 @@ public class XposedMod implements IXposedHookZygoteInit {
                 }
             }
         });
+    }
+
+    private boolean isSleeping() {
+        settingsHelper.reload();
+
+        if (!settingsHelper.getBoolean("pref_sleep", false)) {
+            Logger.log(TAG, "sleep mode is not on.");
+            return false;
+        }
+
+        String sleepStartTime = settingsHelper.getString("pref_sleep_start", null);
+        String sleepEndTime = settingsHelper.getString("pref_sleep_end", null);
+        if (sleepStartTime == null || sleepEndTime == null) {
+            Logger.log(TAG, "begin or end time of sleep mode is not set.");
+            return false;
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        int m = 60 * calendar.get(Calendar.HOUR_OF_DAY) + calendar.get(Calendar.MINUTE);
+        int sleepStartMinutes = 60 * TimePreference.getHour(sleepStartTime) + TimePreference.getMinuter(sleepStartTime);
+        int sleepEndMinutes = 60 * TimePreference.getHour(sleepEndTime) + TimePreference.getMinuter(sleepEndTime);
+
+        return (sleepStartMinutes <= sleepEndMinutes && sleepStartMinutes <= m && m < sleepEndMinutes)
+                || (sleepStartMinutes > sleepEndMinutes && (sleepStartMinutes <= m || m < sleepEndMinutes));
     }
 }

@@ -30,6 +30,18 @@
         android:key="pref_menu_misc"
         android:title="@string/menu_misc" >
         <CheckBoxPreference
+            android:key="pref_sleep"
+            android:summary="@string/sleep_sum"
+            android:title="@string/sleep_title" />
+        <com.haoutil.xposed.xled.model.TimePreference
+            android:key="pref_sleep_start"
+            android:summary="@string/sleep_start_sum"
+            android:title="@string/sleep_start_title" />
+        <com.haoutil.xposed.xled.model.TimePreference
+            android:key="pref_sleep_end"
+            android:summary="@string/sleep_end_sum"
+            android:title="@string/sleep_end_title" />
+        <CheckBoxPreference
             android:key="pref_debug"
             android:summary="@string/enable_debug_sum"
             android:title="@string/enable_debug_title" />
