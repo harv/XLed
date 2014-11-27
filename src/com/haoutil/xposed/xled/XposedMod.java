@@ -174,7 +174,7 @@ public class XposedMod implements IXposedHookZygoteInit {
 
         XposedHelpers.findAndHookMethod("com.android.server.BatteryService$Led", null, "updateLightsLocked", new XC_MethodHook() {
             @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 settingsHelper.reload();
 
                 if (!settingsHelper.getBoolean("pref_enable", true)) {
@@ -186,6 +186,7 @@ public class XposedMod implements IXposedHookZygoteInit {
                 if (isSleeping()) {
                     Logger.log(TAG, "sleep mode is on, disable charging led.");
                     XposedHelpers.callMethod(mBatteryLight, "turnOff");
+                    param.setResult(null);
                     return;
                 }
 
@@ -297,6 +298,7 @@ public class XposedMod implements IXposedHookZygoteInit {
                     Logger.log(TAG, "(SamSung)charging led disabled, turnoff.");
                     XposedHelpers.callMethod(mBatteryLight, "turnOff");
                 }
+                param.setResult(null);
             }
         });
     }

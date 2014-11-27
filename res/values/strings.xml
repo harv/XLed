@@ -84,4 +84,18 @@
     <string name="sleep_start_sum">The time Sleep mode begin.</string>
     <string name="sleep_end_title">Sleep end time</string>
     <string name="sleep_end_sum">The time Sleep mode end.</string>
+
+    <string name="backup_title">Backup</string>
+    <string name="backup_sum">Backup your settings.</string>
+    <string name="backup_success">Backup successfully, backup file is stored as&#160;</string>
+    <string name="backup_failed">Backup failed&#160;</string>
+    <string name="restore_title">Restore</string>
+    <string name="restore_sum">Restore from backup file.</string>
+    <string name="restore_success">Restore successfully!</string>
+    <string name="restore_failed">Restore failed&#160;</string>
+    <string name="restore_invalid">Invalid file&#160;</string>
+    <string name="restore_confirm">Replace all settings with backup file?</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

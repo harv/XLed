@@ -50,6 +50,14 @@
             android:key="pref_icon"
             android:summary="@string/enable_icon_sum"
             android:title="@string/enable_icon_title" />
+        <Preference
+            android:key="pref_backup"
+            android:summary="@string/backup_sum"
+            android:title="@string/backup_title" />
+        <Preference
+            android:key="pref_restore"
+            android:summary="@string/restore_sum"
+            android:title="@string/restore_title" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_menu_about"

@@ -79,4 +79,16 @@
     <string name="sleep_end_title">睡眠结束时间</string>
     <string name="sleep_end_sum">在这个时间退出睡眠模式</string>
     <string name="sleep_start_sum">在这个时间进入睡眠模式</string>
+    <string name="backup_sum">备份自定义数据</string>
+    <string name="backup_title">备份</string>
+    <string name="restore_title">还原</string>
+    <string name="restore_sum">从备份文件还原数据</string>
+    <string name="backup_failed">备份失败&#160;</string>
+    <string name="backup_success">备份成功, 备份文件&#160;</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="restore_confirm">使用备份文件覆盖所有设置？</string>
+    <string name="restore_success">还原成功！</string>
+    <string name="restore_invalid">文件有误&#160;</string>
+    <string name="restore_failed">还原失败&#160;</string>
 </resources>
