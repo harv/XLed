@@ -64,7 +64,7 @@
     <string name="charging_medium_disable_title">禁用中等电量通知灯</string>
     <string name="charging_low_color_title">低电量颜色</string>
     <string name="charging_low_color_sum">电量低时的通知灯颜色\n留空使用默认值</string>
-    <string name="charging_low_disable_title">禁用低电量通知灯（充电）</string>
+    <string name="charging_low_disable_title">禁用低电量通知灯(充电)</string>
     <string name="charging_low_disable_sum">禁用电量低且正在充电时的通知灯</string>
     <string name="charging_medium_color_title">中等电量颜色</string>
     <string name="charging_medium_color_sum">电量中等时的通知灯颜色\n留空使用默认值</string>

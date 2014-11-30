@@ -80,4 +80,18 @@
     <string name="sleep_start_sum">L\'orario in cui il blocco comincia.</string>
     <string name="sleep_end_title">Ora fine blocco</string>
     <string name="sleep_end_sum">L\'orario in cui il blocco finisce.</string>
+
+    <string name="backup_title">Backup</string>
+    <string name="backup_sum">Backup settaggi.</string>
+    <string name="backup_success">Backup con successo, il backup è salvato in as&#160;</string>
+    <string name="backup_failed">Backup fallito&#160;</string>
+    <string name="restore_title">Ripristino</string>
+    <string name="restore_sum">Ripristino dal file di backup.</string>
+    <string name="restore_success">Ripristinato con successo!</string>
+    <string name="restore_failed">Ripristino fallito&#160;</string>
+    <string name="restore_invalid">File non valido&#160;</string>
+    <string name="restore_confirm">Sovrascrivi tutte le impostazioni col file di backup?</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancella</string>
 </resources>
