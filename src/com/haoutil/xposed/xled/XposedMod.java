@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.BatteryManager;
 
@@ -29,7 +30,10 @@ public class XposedMod implements IXposedHookZygoteInit {
 
     private static SettingsHelper settingsHelper;
 
-    private int[] defaultLed = null;
+    // Notification.DEFAULT_LIGHTS
+    private int[] defaultNotificationLed = null;
+
+    private int[] defaultChargingLed = null;
 
     @Override
     public void initZygote(StartupParam startupParam) throws Throwable {
@@ -54,23 +58,39 @@ public class XposedMod implements IXposedHookZygoteInit {
                         notification.flags &= ~(~notification.flags | Notification.FLAG_SHOW_LIGHTS);
                     }
                 } else {
-                    String packageName = ((Context) XposedHelpers.getObjectField(param.thisObject, "mContext")).getPackageName();
+                    Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                    String packageName = mContext.getPackageName();
                     if (!settingsHelper.getBoolean("pref_app_enable_" + packageName, false)) {
                         return;
                     }
 
                     Logger.log(TAG, "handle package " + packageName);
 
-                    if ((notification.defaults & Notification.DEFAULT_LIGHTS) == Notification.DEFAULT_LIGHTS) {
-                        Logger.log(TAG, "ignore default led settings(Notification.DEFAULT_LIGHTS).");
-                        notification.defaults &= ~(~notification.defaults | Notification.DEFAULT_LIGHTS);
-                        notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-                    }
-
                     if (settingsHelper.getBoolean("pref_app_disableled_" + packageName, false)) {
                         Logger.log(TAG, "disable led flashing.");
                         notification.flags &= ~(~notification.flags | Notification.FLAG_SHOW_LIGHTS);
                     } else {
+                        if ((notification.defaults & Notification.DEFAULT_LIGHTS) == Notification.DEFAULT_LIGHTS) {
+                            Logger.log(TAG, "ignore default led settings(Notification.DEFAULT_LIGHTS).");
+                            notification.defaults &= ~(~notification.defaults | Notification.DEFAULT_LIGHTS);
+                            notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+
+                            if (defaultNotificationLed == null) {
+                                defaultNotificationLed = new int[3];
+
+                                Resources resources = mContext.getResources();
+                                defaultNotificationLed[0] = resources.getColor(resources.getIdentifier("config_defaultNotificationColor", "color", "android"));
+                                defaultNotificationLed[1] = resources.getInteger(resources.getIdentifier("config_defaultNotificationLedOn", "integer", "android"));
+                                defaultNotificationLed[2] = resources.getInteger(resources.getIdentifier("config_defaultNotificationLedOff", "integer", "android"));
+                                Logger.log(TAG, "got default notification led {color:" + defaultNotificationLed[0] + ",onms:" + defaultNotificationLed[1] + ",offms:" + defaultNotificationLed[2] + "}");
+                            }
+
+                            notification.ledARGB = defaultNotificationLed[0];
+                            notification.ledOnMS = defaultNotificationLed[1];
+                            notification.ledOffMS = defaultNotificationLed[2];
+                            Logger.log(TAG, "default led settings... {color:" + notification.ledARGB + ",onms:" + notification.ledOnMS + ",offms:" + notification.ledOffMS + "}");
+                        }
+
                         if ((notification.flags & Notification.FLAG_SHOW_LIGHTS) != Notification.FLAG_SHOW_LIGHTS
                                 && settingsHelper.getBoolean("pref_app_forceenable_" + packageName, true)) {
                             Logger.log(TAG, "force led flashing.");
@@ -196,13 +216,13 @@ public class XposedMod implements IXposedHookZygoteInit {
 
                 Logger.log(TAG, "update charging led.");
 
-                if (defaultLed == null) {
-                    defaultLed = new int[5];
-                    defaultLed[0] = XposedHelpers.getIntField(param.thisObject, "mBatteryLowARGB");
-                    defaultLed[1] = XposedHelpers.getIntField(param.thisObject, "mBatteryMediumARGB");
-                    defaultLed[2] = XposedHelpers.getIntField(param.thisObject, "mBatteryFullARGB");
-                    defaultLed[3] = XposedHelpers.getIntField(param.thisObject, "mBatteryLedOn");
-                    defaultLed[4] = XposedHelpers.getIntField(param.thisObject, "mBatteryLedOff");
+                if (defaultChargingLed == null) {
+                    defaultChargingLed = new int[5];
+                    defaultChargingLed[0] = XposedHelpers.getIntField(param.thisObject, "mBatteryLowARGB");
+                    defaultChargingLed[1] = XposedHelpers.getIntField(param.thisObject, "mBatteryMediumARGB");
+                    defaultChargingLed[2] = XposedHelpers.getIntField(param.thisObject, "mBatteryFullARGB");
+                    defaultChargingLed[3] = XposedHelpers.getIntField(param.thisObject, "mBatteryLedOn");
+                    defaultChargingLed[4] = XposedHelpers.getIntField(param.thisObject, "mBatteryLedOff");
                 }
 
                 int level, status;
@@ -259,16 +279,16 @@ public class XposedMod implements IXposedHookZygoteInit {
                         } else {
                             if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
                                 Logger.log(TAG, "setting low battery led(charging)...");
-                                XposedHelpers.callMethod(mBatteryLight, "setColor", settingsHelper.getInt("pref_charging_low_color", defaultLed[0]));
+                                XposedHelpers.callMethod(mBatteryLight, "setColor", settingsHelper.getInt("pref_charging_low_color", defaultChargingLed[0]));
                             } else {
                                 Logger.log(TAG, "setting low battery led(not charging)...");
                                 XposedHelpers.callMethod(
                                         mBatteryLight,
                                         "setFlashing",
-                                        settingsHelper.getInt("pref_charging_low_color", defaultLed[0]),
+                                        settingsHelper.getInt("pref_charging_low_color", defaultChargingLed[0]),
                                         XposedHelpers.getStaticIntField(XposedHelpers.findClass("com.android.server.LightsService", null), "LIGHT_FLASH_TIMED"),
-                                        settingsHelper.getInt("pref_charging_onms", defaultLed[3]),
-                                        settingsHelper.getInt("pref_charging_offms", defaultLed[4])
+                                        settingsHelper.getInt("pref_charging_onms", defaultChargingLed[3]),
+                                        settingsHelper.getInt("pref_charging_offms", defaultChargingLed[4])
                                 );
                             }
                         }
@@ -279,7 +299,7 @@ public class XposedMod implements IXposedHookZygoteInit {
                                 XposedHelpers.callMethod(mBatteryLight, "turnOff");
                             } else {
                                 Logger.log(TAG, "setting full battery led...");
-                                XposedHelpers.callMethod(mBatteryLight, "setColor", settingsHelper.getInt("pref_charging_full_color", defaultLed[2]));
+                                XposedHelpers.callMethod(mBatteryLight, "setColor", settingsHelper.getInt("pref_charging_full_color", defaultChargingLed[2]));
                             }
                         } else {
                             if (settingsHelper.getBoolean("pref_charging_medium_disable", false)) {
@@ -287,7 +307,7 @@ public class XposedMod implements IXposedHookZygoteInit {
                                 XposedHelpers.callMethod(mBatteryLight, "turnOff");
                             } else {
                                 Logger.log(TAG, "setting medium battery led...");
-                                XposedHelpers.callMethod(mBatteryLight, "setColor", settingsHelper.getInt("pref_charging_medium_color", defaultLed[1]));
+                                XposedHelpers.callMethod(mBatteryLight, "setColor", settingsHelper.getInt("pref_charging_medium_color", defaultChargingLed[1]));
                             }
                         }
                     } else {
