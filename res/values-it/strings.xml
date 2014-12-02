@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_descirption">Impostazioni personali LED notifica per ogni applicazione.</string>
     <string name="app_config_name">Impostazioni applicazione</string>
     <string name="charging_led_name">Impostazioni LED ricarica</string>
@@ -31,7 +31,7 @@
     <string name="app_forceenable_title">Forza LED lampeggiante</string>
     <string name="app_forceenable_sum">Forza LED flashing anche senza notifica LED di default.</string>
     <string name="app_led_color_title">Colore LED</string>
-    <string name="app_led_color_sum">Il colore per il LED mentre è lampeggiante.\nlasciare bianco per usare valore standard.</string>
+    <string name="app_led_color_sum">Il colore per il LED mentre è lampeggiante.\nlasciare vuoto per usare valore standard.</string>
     <string name="app_led_onms_title">Tempo accensione LED</string>
     <string name="app_led_onms_sum">Il numero di millisecondi per LED acceso mentre è lampeggiante.\nlasciare vuoto per usare valore standard.</string>
     <string name="app_led_offms_title">Tempo spegnimento LED</string>
@@ -74,7 +74,7 @@
     <string name="charging_offms_title">Tempo off</string>
     <string name="charging_offms_sum">Numero di millisecondi per il LED spento mentre la batteria è scarica e non in carica.\nlasciare vuoto per valore standard.</string>
 
-    <string name="sleep_title">MOdalità blocco</string>
+    <string name="sleep_title">Modalità blocco</string>
     <string name="sleep_sum">Blocco nell\'orario specificato, disabilita tutte le notifiche LED.</string>
     <string name="sleep_start_title">Ora inizio blocco</string>
     <string name="sleep_start_sum">L\'orario in cui il blocco comincia.</string>
