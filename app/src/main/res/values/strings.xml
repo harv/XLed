@@ -1,0 +1,101 @@
+<resources>
+
+    <string name="app_name" translatable="false">XLED</string>
+    <string name="app_description">Custom LED notification settings for each application.</string>
+    <string name="app_config_name">Application settings</string>
+    <string name="charging_led_name">Charging LED settings</string>
+    <string name="menu_switcher">Switcher</string>
+    <string name="menu_config">LED settings</string>
+    <string name="menu_misc">Misc</string>
+    <string name="menu_about">About</string>
+    <string name="enable_title">Enable XLED</string>
+    <string name="enable_sum">Enable custom LED notification settings will override app\'s default settings.</string>
+    <string name="enable_app_title">Enable custom LED</string>
+    <string name="enable_app_sum">Enable custom LED notification settings will override app\'s default settings.\nUncheck this option will not disable default settings.</string>
+    <string name="disable_led_title">Disable LED</string>
+    <string name="disable_led_sum">Check this option to disable app\'s default settings(The LED will not flashing).</string>
+    <string name="app_config_title">Per-app settings</string>
+    <string name="app_config_sum">Configure custom LED notification settings for each application.</string>
+    <string name="app_info_title" translatable="false">XLED</string>
+    <string name="app_info_sum">Version: v#version#\nAuthor: Harv Chen(hzchenhao@gmail.com)\nClick to report issue via email.</string>
+    <string name="app_info_mailto" translatable="false">mailto:hzchenhao@gmail.com</string>
+    <string name="app_help_title">Support</string>
+    <string name="app_help_sum">Get support and discuss at github.com</string>
+    <string name="app_help_url" translatable="false">https://github.com/Harv/XLed</string>
+    <string name="enable_icon_title">Show icon</string>
+    <string name="enable_icon_sum">Show XLED icon in app drawer.</string>
+    <string name="charging_led_title">Charging LED</string>
+    <string name="charging_led_sum">Configure Charging LED</string>
+    <string name="screenon_enable_title">Screen on LED</string>
+    <string name="screenon_enable_sum">Enable LED flashing while screen is on.</string>
+    <string name="enable_debug_title">Debug mode</string>
+    <string name="enable_debug_sum">Enable debug mode for writing log to [Xposed Log]</string>
+    <string name="load_apps_title">Loading applications&#8230;</string>
+    <string name="icon_desc">Application icon</string>
+    <string name="app_forceenable_title">Force LED flashing</string>
+    <string name="app_forceenable_sum">Force LED flashing even without LED notification by default.</string>
+    <string name="app_led_color_title">LED color</string>
+    <string name="app_led_color_sum">The color for the LED while it\'s flashing.\nleave blank to use default value.</string>
+    <string name="app_led_onms_title">LED on time</string>
+    <string name="app_led_onms_sum">The number of milliseconds for the LED to be on while it\'s flashing.\nleave blank to use default value.</string>
+    <string name="app_led_offms_title">LED off time</string>
+    <string name="app_led_offms_sum">The number of milliseconds for the LED to be off while it\'s flashing.\nleave blank to use default value.</string>
+    <string name="app_reset_title">Reset</string>
+    <string name="app_reset_sum">Reset to default settings.</string>
+    <string name="tip_reset">Reset succeed!</string>
+    <string name="tip_incorrect_colorformat">color format is incorrect!\neg: #FF00FF00</string>
+    <string name="tip_incorrect_onmsformat">onms format is incorrect!\neg: 300</string>
+    <string name="tip_incorrect_offmsformat">offms format is incorrect!\neg: 1000</string>
+    <string name="new_color_code">Hex Code:</string>
+    <string name="test_new_color">Test</string>
+    <string name="test_new_color_message">You may should turn off screen or enable \"Screen on LED\" to activate LED blinking.\n\nPlease do not close this dialog before test is finished.</string>
+    <string name="test_new_color_close">Close</string>
+    <string name="commit_new_color">Apply</string>
+    <string name="color_picker_name">Color Picker</string>
+    <string name="color_picker_saturation">Saturation</string>
+    <string name="color_picker_value">Value</string>
+    <string name="color_picker_opacity">Opacity</string>
+    <string name="catalog_active">Active</string>
+    <string name="catalog_disableled">Disabled</string>
+    <string name="charging_enable_title">Enable</string>
+    <string name="charging_enable_sum">Enable custom Charging LED will override default settings.</string>
+    <string name="low_disable_title">Disable low battery LED</string>
+    <string name="low_disable_sum">Disable LED flashing when battery is low and not charging.</string>
+    <string name="charging_low_disable_title">Disable low battery LED(Charging)</string>
+    <string name="charging_low_disable_sum">Disable LED when battery is low and charging.</string>
+    <string name="charging_medium_disable_title">Disable medium battery LED(Charging)</string>
+    <string name="charging_medium_disable_sum">Disable LED when charging and halfway full.</string>
+    <string name="charging_full_disable_title">Disable full battery LED(Charging)</string>
+    <string name="charging_full_disable_sum">Disable LED when full or charging and nearly full.</string>
+    <string name="charging_low_color_title">Low battery color</string>
+    <string name="charging_low_color_sum">The color for the LED when battery is low(charging and not charging)\nleave blank to use default value.</string>
+    <string name="charging_medium_color_title">Medium battery color</string>
+    <string name="charging_medium_color_sum">The color for the LED when charging and halfway full.\nleave blank to use default value.</string>
+    <string name="charging_full_color_title">Full battery color</string>
+    <string name="charging_full_color_sum">The color for the LED when full or charging and nearly full.\nleave blank to use default value.</string>
+    <string name="charging_onms_title">On time</string>
+    <string name="charging_onms_sum">The number of milliseconds for the LED to be on while battery is low and not charging.\nleave blank to use default value.</string>
+    <string name="charging_offms_title">Off time</string>
+    <string name="charging_offms_sum">The number of milliseconds for the LED to be off while battery is low and not charging.\nleave blank to use default value.</string>
+
+    <string name="sleep_title">Sleep mode</string>
+    <string name="sleep_sum">Sleep in specified time, disable all LED notifications.</string>
+    <string name="sleep_start_title">Sleep start time</string>
+    <string name="sleep_start_sum">The time Sleep mode begin.</string>
+    <string name="sleep_end_title">Sleep end time</string>
+    <string name="sleep_end_sum">The time Sleep mode end.</string>
+
+    <string name="backup_title">Backup</string>
+    <string name="backup_sum">Backup your settings.</string>
+    <string name="backup_success">Backup successfully, backup file is stored as&#160;</string>
+    <string name="backup_failed">Backup failed&#160;</string>
+    <string name="restore_title">Restore</string>
+    <string name="restore_sum">Restore from backup file.</string>
+    <string name="restore_success">Restore successfully!</string>
+    <string name="restore_failed">Restore failed&#160;</string>
+    <string name="restore_invalid">Invalid file&#160;</string>
+    <string name="restore_confirm">Replace all settings with backup file?</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+</resources>
