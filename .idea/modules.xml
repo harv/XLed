@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/XLED.iml" filepath="$PROJECT_DIR$/XLED.iml" />
+      <module fileurl="file://$PROJECT_DIR$/XLed.iml" filepath="$PROJECT_DIR$/XLed.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

@@ -91,4 +91,10 @@
     <string name="restore_success">还原成功！</string>
     <string name="restore_invalid">文件有误&#160;</string>
     <string name="restore_failed">还原失败&#160;</string>
+    <string name="cyclingled_enable_sum">当有多个通知时，循环闪烁通知灯</string>
+    <string name="cyclingled_enable_title">循环通知灯</string>
+    <string name="charging_percent_full_title">充足电量值</string>
+    <string name="charging_percent_low_title">低电量值</string>
+    <string name="charging_percent_low_sum">低于此百分比表示电量过低\n留空使用默认值</string>
+    <string name="charging_percent_full_sum">高于此百分比表示电量充足\n留空使用默认值</string>
 </resources>

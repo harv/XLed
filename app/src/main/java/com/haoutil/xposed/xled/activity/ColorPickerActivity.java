@@ -28,99 +28,99 @@ import com.larswerkman.holocolorpicker.SVBar;
 import com.larswerkman.holocolorpicker.SaturationBar;
 
 public class ColorPickerActivity extends Activity implements OnTouchListener, OnColorChangedListener, OnClickListener, TextWatcher {
-	private InputMethodManager imm;
+    private InputMethodManager imm;
 
-	private ColorPicker picker;
+    private ColorPicker picker;
     private SaturationBar saturationBar;
     private SVBar svBar;
-	private OpacityBar opacityBar;
-	private EditText tv_newColor;
-	private Button bt_test, bt_commit;
+    private OpacityBar opacityBar;
+    private EditText tv_newColor;
+    private Button bt_test, bt_commit;
 
     private int requestCode;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.color_picker);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.color_picker);
 
-		imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-		picker = (ColorPicker) findViewById(R.id.picker);
+        picker = (ColorPicker) findViewById(R.id.picker);
         saturationBar = (SaturationBar) findViewById(R.id.saturationBar);
         svBar = (SVBar) findViewById(R.id.svbar);
-		opacityBar = (OpacityBar) findViewById(R.id.opacitybar);
-		tv_newColor = (EditText) findViewById(R.id.tv_newColor);
-		bt_commit = (Button) findViewById(R.id.bt_commit);
+        opacityBar = (OpacityBar) findViewById(R.id.opacitybar);
+        tv_newColor = (EditText) findViewById(R.id.tv_newColor);
+        bt_commit = (Button) findViewById(R.id.bt_commit);
         bt_test = (Button) findViewById(R.id.bt_test);
 
-		picker.setOnTouchListener(this);
-		picker.setOnColorChangedListener(this);
+        picker.setOnTouchListener(this);
+        picker.setOnColorChangedListener(this);
         picker.addSaturationBar(saturationBar);
         picker.addSVBar(svBar);
-		picker.addOpacityBar(opacityBar);
+        picker.addOpacityBar(opacityBar);
 
-		int originColor = getIntent().getIntExtra("originColor", Color.TRANSPARENT);
-		picker.setOldCenterColor(originColor);
+        int originColor = getIntent().getIntExtra("originColor", Color.TRANSPARENT);
+        picker.setOldCenterColor(originColor);
 
         requestCode = getIntent().getIntExtra("requestCode", 0);
 
-		if (originColor == Color.TRANSPARENT) {
-			originColor = Color.BLUE;
-		}
-		picker.setColor(originColor);
+        if (originColor == Color.TRANSPARENT) {
+            originColor = Color.BLUE;
+        }
+        picker.setColor(originColor);
 
         saturationBar.setOnTouchListener(this);
         svBar.setOnTouchListener(this);
         opacityBar.setOnTouchListener(this);
 
-		tv_newColor.setText(String.format("#%08X", (0xFFFFFFFF & originColor)));
-		tv_newColor.addTextChangedListener(this);
+        tv_newColor.setText(String.format("#%08X", (0xFFFFFFFF & originColor)));
+        tv_newColor.addTextChangedListener(this);
 
-		bt_commit.setOnClickListener(this);
+        bt_commit.setOnClickListener(this);
         bt_test.setOnClickListener(this);
-	}
+    }
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			hideSoftKeyBoard();
-		}
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            hideSoftKeyBoard();
+        }
 
-		return super.onTouchEvent(event);
-	}
+        return super.onTouchEvent(event);
+    }
 
-	// OnTouchListener implementation
-	@Override
-	public boolean onTouch(View c, MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			hideSoftKeyBoard();
-		}
+    // OnTouchListener implementation
+    @Override
+    public boolean onTouch(View c, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            hideSoftKeyBoard();
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	// OnColorChangedListener implementation
-	@Override
-	public void onColorChanged(int color) {
-		if (!tv_newColor.isFocused()) {
-			tv_newColor.setText(String.format("#%08X", (0xFFFFFFFF & color)));
-		}
-	}
+    // OnColorChangedListener implementation
+    @Override
+    public void onColorChanged(int color) {
+        if (!tv_newColor.isFocused()) {
+            tv_newColor.setText(String.format("#%08X", (0xFFFFFFFF & color)));
+        }
+    }
 
-	// OnClickListener implementation
-	@Override
-	public void onClick(View v) {
+    // OnClickListener implementation
+    @Override
+    public void onClick(View v) {
         switch (v.getId()) {
-            case  R.id.bt_test:
+            case R.id.bt_test:
                 Notification notification = new Notification();
                 notification.flags |= Notification.FLAG_SHOW_LIGHTS;
                 try {
-                	notification.ledARGB = Color.parseColor(tv_newColor.getText().toString());
+                    notification.ledARGB = Color.parseColor(tv_newColor.getText().toString());
                 } catch (Exception e) {
-                	Toast.makeText(ColorPickerActivity.this, getString(R.string.tip_incorrect_colorformat), Toast.LENGTH_SHORT).show();
-                	break;
-				}
+                    Toast.makeText(ColorPickerActivity.this, getString(R.string.tip_incorrect_colorformat), Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 notification.ledOnMS = 300;
                 notification.ledOffMS = 1000;
 
@@ -135,11 +135,11 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
                                 dialog.cancel();
                             }
                         }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialogInterface) {
-                                notificationManager.cancel(0);
-                            }
-                        }).show();
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        notificationManager.cancel(0);
+                    }
+                }).show();
 
                 break;
             case R.id.bt_commit:
@@ -152,28 +152,31 @@ public class ColorPickerActivity extends Activity implements OnTouchListener, On
 
                 break;
         }
-	}
+    }
 
-	// TextWatcher implementation
-	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    // TextWatcher implementation
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
 
-	@Override
-	public void onTextChanged(CharSequence s, int start, int before, int count) {}
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
 
-	@Override
-	public void afterTextChanged(Editable s) {
-		if (tv_newColor.isFocused()) {
-			try {
-				picker.setColor(Color.parseColor(tv_newColor.getText().toString()));
-			} catch (Exception e) {}
-		}
-	}
+    @Override
+    public void afterTextChanged(Editable s) {
+        if (tv_newColor.isFocused()) {
+            try {
+                picker.setColor(Color.parseColor(tv_newColor.getText().toString()));
+            } catch (Exception e) {
+            }
+        }
+    }
 
-	private void hideSoftKeyBoard() {
-		if (tv_newColor.isFocused()) {
-			tv_newColor.clearFocus();
-			imm.hideSoftInputFromWindow(tv_newColor.getWindowToken(), 0);
-		}
-	}
+    private void hideSoftKeyBoard() {
+        if (tv_newColor.isFocused()) {
+            tv_newColor.clearFocus();
+            imm.hideSoftInputFromWindow(tv_newColor.getWindowToken(), 0);
+        }
+    }
 }

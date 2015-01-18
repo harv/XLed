@@ -1,93 +1,99 @@
 package com.haoutil.xposed.xled.model;
 
+import android.content.pm.ApplicationInfo;
 import android.graphics.drawable.Drawable;
 
 public class AppListItem {
-	private String sortLetter;
+    private String sortLetter;
 
-	private boolean enable;
-	private boolean disableLED;
-	private Drawable icon;
-	private String name;
-	private String pinyin;
-	private String packageName;
-	private int color;
+    private ApplicationInfo appInfo;
+    private boolean enable;
+    private boolean disableLED;
+    private Drawable icon;
+    private String name;
+    private String pinyin;
+    private String packageName;
+    private int color;
 
-	public AppListItem(String sortLetter, boolean enable, boolean disableLED,
-			Drawable icon, String name, String pinyin, String packageName,
-			int color) {
-		this.sortLetter = sortLetter;
-		this.enable = enable;
-		this.disableLED = disableLED;
-		this.icon = icon;
-		this.name = name;
-		this.pinyin = pinyin;
-		this.packageName = packageName;
-		this.color = color;
-	}
+    public AppListItem(ApplicationInfo appInfo, boolean enable, boolean disableLED, String name, String pinyin, String packageName, int color) {
+        this.appInfo = appInfo;
+        this.enable = enable;
+        this.disableLED = disableLED;
+        this.name = name;
+        this.pinyin = pinyin;
+        this.packageName = packageName;
+        this.color = color;
+    }
 
-	public String getSortLetter() {
-		return sortLetter;
-	}
+    public ApplicationInfo getAppInfo() {
+        return appInfo;
+    }
 
-	public void setSortLetter(String sortLetter) {
-		this.sortLetter = sortLetter;
-	}
+    public void setAppInfo(ApplicationInfo appInfo) {
+        this.appInfo = appInfo;
+    }
 
-	public boolean isEnable() {
-		return enable;
-	}
+    public String getSortLetter() {
+        return sortLetter;
+    }
 
-	public void setEnable(boolean enable) {
-		this.enable = enable;
-	}
+    public void setSortLetter(String sortLetter) {
+        this.sortLetter = sortLetter;
+    }
 
-	public boolean isDisableLED() {
-		return disableLED;
-	}
+    public boolean isEnable() {
+        return enable;
+    }
 
-	public void setDisableLED(boolean disableLED) {
-		this.disableLED = disableLED;
-	}
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
 
-	public Drawable getIcon() {
-		return icon;
-	}
+    public boolean isDisableLED() {
+        return disableLED;
+    }
 
-	public void setIcon(Drawable icon) {
-		this.icon = icon;
-	}
+    public void setDisableLED(boolean disableLED) {
+        this.disableLED = disableLED;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Drawable getIcon() {
+        return icon;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setIcon(Drawable icon) {
+        this.icon = icon;
+    }
 
-	public String getPinyin() {
-		return pinyin;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setPinyin(String pinyin) {
-		this.pinyin = pinyin;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getPackageName() {
-		return packageName;
-	}
+    public String getPinyin() {
+        return pinyin;
+    }
 
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
+    public void setPinyin(String pinyin) {
+        this.pinyin = pinyin;
+    }
 
-	public int getColor() {
-		return color;
-	}
+    public String getPackageName() {
+        return packageName;
+    }
 
-	public void setColor(int color) {
-		this.color = color;
-	}
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
 }

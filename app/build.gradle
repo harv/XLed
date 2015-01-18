@@ -8,8 +8,8 @@ android {
         applicationId "com.haoutil.xposed.xled"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 9
-        versionName "1.6"
+        versionCode 10
+        versionName "1.6.1"
     }
 
     compileOptions {

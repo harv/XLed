@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
         android:key="pref_menu_switcher"
-        android:title="@string/menu_switcher" >
+        android:title="@string/menu_switcher">
         <CheckBoxPreference
             android:key="pref_enable"
             android:persistent="false"
@@ -18,7 +18,7 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_menu_config"
-        android:title="@string/menu_config" >
+        android:title="@string/menu_config">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="pref_forceenable"

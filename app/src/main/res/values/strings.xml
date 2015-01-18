@@ -98,4 +98,12 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+
+    <string name="cyclingled_enable_title">Cycling LED</string>
+    <string name="cyclingled_enable_sum">Cycling blinking led when there are more than one notifications at one time.</string>
+
+    <string name="charging_percent_low_title">Low battery level</string>
+    <string name="charging_percent_low_sum">Less than this percent indicate the battery is low.</string>
+    <string name="charging_percent_full_title">Full battery level</string>
+        <string name="charging_percent_full_sum">Greater than this percent indicate the battery is full or nearly full.</string>
 </resources>

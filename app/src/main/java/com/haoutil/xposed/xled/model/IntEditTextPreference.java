@@ -6,25 +6,25 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 
 public class IntEditTextPreference extends EditTextPreference {
-	public IntEditTextPreference(Context context) {
-		super(context);
-	}
+    public IntEditTextPreference(Context context) {
+        super(context);
+    }
 
-	public IntEditTextPreference(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public IntEditTextPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	public IntEditTextPreference(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public IntEditTextPreference(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-	@Override
-	protected String getPersistedString(String defaultReturnValue) {
-		return String.valueOf(getPersistedInt(-1));
-	}
+    @Override
+    protected String getPersistedString(String defaultReturnValue) {
+        return String.valueOf(getPersistedInt(-1));
+    }
 
-	@Override
-	protected boolean persistString(String value) {
-		return TextUtils.isEmpty(value) || persistInt(Integer.valueOf(value));
-	}
+    @Override
+    protected boolean persistString(String value) {
+        return TextUtils.isEmpty(value) || persistInt(Integer.valueOf(value));
+    }
 }

@@ -7,14 +7,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.haoutil.xposed.xled.R;
-import com.haoutil.xposed.xled.XposedMod;
+import com.haoutil.xposed.xled.model.InputFilterMinMax;
 import com.haoutil.xposed.xled.model.IntEditTextPreference;
+import com.haoutil.xposed.xled.util.Constant;
 import com.haoutil.xposed.xled.util.SettingsHelper;
 
 public class ChargingActivity extends Activity {
@@ -52,15 +55,15 @@ public class ChargingActivity extends Activity {
                 Intent intent = new Intent(ChargingActivity.this.getApplicationContext(), ColorPickerActivity.class);
                 String key = preference.getKey();
                 if (key.equals("pref_charging_low_color")) {
-                    intent.putExtra("originColor", settingsHelper.getInt(key, XposedMod.DEFAULT_COLOR));
+                    intent.putExtra("originColor", settingsHelper.getInt(key, Constant.DEFAULT_COLOR));
                     intent.putExtra("requestCode", 0);
                     ChargingActivity.this.startActivityForResult(intent, 0);
                 } else if (key.equals("pref_charging_medium_color")) {
-                    intent.putExtra("originColor", settingsHelper.getInt(key, XposedMod.DEFAULT_COLOR));
+                    intent.putExtra("originColor", settingsHelper.getInt(key, Constant.DEFAULT_COLOR));
                     intent.putExtra("requestCode", 1);
                     ChargingActivity.this.startActivityForResult(intent, 1);
                 } else if (key.equals("pref_charging_full_color")) {
-                    intent.putExtra("originColor", settingsHelper.getInt(key, XposedMod.DEFAULT_COLOR));
+                    intent.putExtra("originColor", settingsHelper.getInt(key, Constant.DEFAULT_COLOR));
                     intent.putExtra("requestCode", 2);
                     ChargingActivity.this.startActivityForResult(intent, 2);
                 }
@@ -95,16 +98,26 @@ public class ChargingActivity extends Activity {
                     if (TextUtils.isEmpty(String.valueOf(o))) { // leave blank to use default value
                         settingsHelper.remove(key);
                         ((IntEditTextPreference) preference).setText("");
-                        return false;
                     }
                     message.what = 3;
                 } else if (key.equals("pref_charging_offms")) {
                     if (TextUtils.isEmpty(String.valueOf(o))) { // leave blank to use default value
                         settingsHelper.remove(key);
                         ((IntEditTextPreference) preference).setText("");
-                        return false;
                     }
                     message.what = 4;
+                } else if (key.equals("pref_charging_percent_low")) {
+                    if (TextUtils.isEmpty(String.valueOf(o))) { // leave blank to use default value
+                        settingsHelper.remove(key);
+                        ((IntEditTextPreference) preference).setText("");
+                    }
+                    message.what = 5;
+                } else if (key.equals("pref_charging_percent_full")) {
+                    if (TextUtils.isEmpty(String.valueOf(o))) { // leave blank to use default value
+                        settingsHelper.remove(key);
+                        ((IntEditTextPreference) preference).setText("");
+                    }
+                    message.what = 6;
                 }
 
                 mHandler.sendMessageDelayed(message, 200);
@@ -196,6 +209,16 @@ public class ChargingActivity extends Activity {
 
             final Preference chargingOffms = getPreferenceManager().findPreference("pref_charging_offms");
             chargingOffms.setOnPreferenceChangeListener(onPreferenceChangeListener);
+
+            InputFilter[] filter = new InputFilter[]{new InputFilterMinMax(0, 100)};
+
+            final IntEditTextPreference chargingLowLevel = (IntEditTextPreference) getPreferenceManager().findPreference("pref_charging_percent_low");
+            chargingLowLevel.setOnPreferenceChangeListener(onPreferenceChangeListener);
+            chargingLowLevel.getEditText().setFilters(filter);
+
+            final IntEditTextPreference chargingFullLevel = (IntEditTextPreference) getPreferenceManager().findPreference("pref_charging_percent_full");
+            chargingFullLevel.setOnPreferenceChangeListener(onPreferenceChangeListener);
+            chargingFullLevel.getEditText().setFilters(filter);
         }
     }
 }

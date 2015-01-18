@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
         android:key="pref_menu_switcher"
-        android:title="@string/menu_switcher" >
+        android:title="@string/menu_switcher">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="pref_enable"
@@ -12,7 +12,7 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_menu_config"
-        android:title="@string/menu_config" >
+        android:title="@string/menu_config">
         <Preference
             android:key="pref_app_config"
             android:summary="@string/app_config_sum"
@@ -25,10 +25,14 @@
             android:key="pref_screenon_enable"
             android:summary="@string/screenon_enable_sum"
             android:title="@string/screenon_enable_title" />
+        <CheckBoxPreference
+            android:key="pref_cyclingled_enable"
+            android:summary="@string/cyclingled_enable_sum"
+            android:title="@string/cyclingled_enable_title" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_menu_misc"
-        android:title="@string/menu_misc" >
+        android:title="@string/menu_misc">
         <CheckBoxPreference
             android:key="pref_sleep"
             android:summary="@string/sleep_sum"
@@ -61,10 +65,10 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_menu_about"
-        android:title="@string/menu_about" >
+        android:title="@string/menu_about">
         <Preference
             android:key="pref_app_info"
-            android:title="@string/app_info_title" >
+            android:title="@string/app_info_title">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/app_info_mailto" />
@@ -72,7 +76,7 @@
         <Preference
             android:key="prefs_app_help"
             android:summary="@string/app_help_sum"
-            android:title="@string/app_help_title" >
+            android:title="@string/app_help_title">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/app_help_url" />

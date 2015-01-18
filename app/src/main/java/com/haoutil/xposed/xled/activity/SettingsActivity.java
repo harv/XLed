@@ -1,7 +1,9 @@
 package com.haoutil.xposed.xled.activity;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,6 +20,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.haoutil.xposed.xled.R;
@@ -53,6 +56,18 @@ public class SettingsActivity extends Activity {
                     break;
                 case 2:
                     SettingsActivity.this.sendBroadcast(new Intent("com.haoutil.xposed.xled.UPDATE_CHARGING_LED"));
+                    SettingsActivity.this.sendBroadcast(new Intent("com.haoutil.xposed.xled.UPDATE_NOTIFICATION_LED"));
+                    break;
+                case 3:
+                    Intent mStartActivity = new Intent(SettingsActivity.this, SettingsActivity.class);
+                    int mPendingIntentId = 123456;
+                    PendingIntent mPendingIntent = PendingIntent.getActivity(SettingsActivity.this, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+                    AlarmManager am = (AlarmManager) SettingsActivity.this.getSystemService(Context.ALARM_SERVICE);
+                    am.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                    break;
+                case 4:
+                    SettingsActivity.this.sendBroadcast(new Intent("com.haoutil.xposed.xled.UPDATE_NOTIFICATION_LED"));
                     break;
             }
         }
@@ -113,6 +128,8 @@ public class SettingsActivity extends Activity {
                     msg.obj = newValue;
                 } else if (key.equals("pref_sleep") || key.equals("pref_sleep_start") || key.equals("pref_sleep_end")) {
                     msg.what = 2;
+                } else if (key.equals("pref_cyclingled_enable")) {
+                    msg.what = 4;
                 }
 
                 // delay 100ms for waiting value persisting.
@@ -135,6 +152,7 @@ public class SettingsActivity extends Activity {
             getPreferenceManager().findPreference("pref_app_config").setOnPreferenceClickListener(onPreferenceClickListener);
             getPreferenceManager().findPreference("pref_charging_led").setOnPreferenceClickListener(onPreferenceClickListener);
             getPreferenceManager().findPreference("pref_screenon_enable").setOnPreferenceChangeListener(onPreferenceChangeListener);
+            getPreferenceManager().findPreference("pref_cyclingled_enable").setOnPreferenceChangeListener(onPreferenceChangeListener);
             getPreferenceManager().findPreference("pref_sleep").setOnPreferenceChangeListener(onPreferenceChangeListener);
             getPreferenceManager().findPreference("pref_sleep_start").setOnPreferenceChangeListener(onPreferenceChangeListener);
             getPreferenceManager().findPreference("pref_sleep_end").setOnPreferenceChangeListener(onPreferenceChangeListener);
@@ -164,6 +182,8 @@ public class SettingsActivity extends Activity {
     }
 
     private class ImportTask extends AsyncTask<File, String, String> {
+        private boolean importSucceed = false;
+
         @Override
         protected String doInBackground(File... params) {
             File inFile = params[0];
@@ -188,12 +208,16 @@ public class SettingsActivity extends Activity {
                     prefsFile.delete();
                     newPrefsFile.renameTo(prefsFile);
                 }
+                importSucceed = true;
                 return getString(R.string.restore_success);
             }
         }
 
         @Override
         protected void onPostExecute(String result) {
+            if (importSucceed) {
+                mHandler.sendEmptyMessage(3);
+            }
             Toast.makeText(SettingsActivity.this, result, Toast.LENGTH_SHORT).show();
         }
     }
